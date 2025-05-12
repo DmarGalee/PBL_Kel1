@@ -33,4 +33,15 @@ Route::middleware(['auth'])->group(function () { //artinya semua route di dalam 
     // masukkan semua route yang perlu autentikasi di sini
 
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+    //route user
+
+    
+    //route level
+
+
+    //route gedung
+
+
+    //route periode
 });
