@@ -34,14 +34,48 @@ Route::middleware(['auth'])->group(function () { //artinya semua route di dalam 
 
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-    //route user
+      Route::middleware(['authorize:ADM'])->group(function () {
+         
+        //route user
+        Route::group(['prefix' => 'user'], function () {
+          
+        });
+         //route level
+         Route::group(['prefix' => 'level'], function () {
+          
+        });
 
+        //route gedung
+         Route::group(['prefix' => 'gedung'], function () {
+          
+        });
+
+         //route lantai
+         Route::group(['prefix' => 'lantai'], function () {
+          
+        });
+
+         //route ruang
+         Route::group(['prefix' => 'ruang'], function () {
+          
+        });
+
+        //route periode
+         Route::group(['prefix' => 'periode'], function () {
+         
+        });
+    });
+
+    // Pelapor Mahasiswa, Dosen, Tenga Kependidikan
+    Route::middleware(['authorize:MHS,DSN,TENDIK'])->group(function () {
+    });
+
+    // Sarana Prasarana
+    Route::middleware(['authorize:SARPRAS'])->group(function () {
+    });
+
+    // Teknisi
+    Route::middleware(['authorize:TEKNISI'])->group(function () {
+    });
     
-    //route level
-
-
-    //route gedung
-
-
-    //route periode
 });
