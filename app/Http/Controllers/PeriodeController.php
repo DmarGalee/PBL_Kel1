@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\Periode;
+use App\Models\PeriodeModel;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -31,7 +31,7 @@ class PeriodeController extends Controller
     // Ambil data periode dalam bentuk json untuk datatables
     public function list(Request $request)
     {
-        $periodes = Periode::select('periode_id', 'periode_name', 'is_active');
+        $periodes = PeriodeModel::select('periode_id', 'periode_name', 'is_active');
 
         return DataTables::of($periodes)
             ->addIndexColumn()
@@ -77,7 +77,7 @@ class PeriodeController extends Controller
             'is_active' => 'required|boolean'
         ]);
 
-        Periode::create([
+        PeriodeModel::create([
             'periode_id' => $request->periode_id,
             'periode_name' => $request->periode_name,
             'is_active' => $request->is_active,
@@ -89,7 +89,7 @@ class PeriodeController extends Controller
     // Menampilkan detail periode
     public function show(string $id)
     {
-        $periode = Periode::find($id);
+        $periode = PeriodeModel::find($id);
 
         $breadcrumb = (object) [
             'title' => 'Detail Periode',
@@ -108,7 +108,7 @@ class PeriodeController extends Controller
     // Menampilkan halaman form edit periode
     public function edit(string $id)
     {
-        $periode = Periode::find($id);
+        $periode = PeriodeModel::find($id);
 
         $breadcrumb = (object) [
             'title' => 'Edit Periode',
@@ -133,7 +133,7 @@ class PeriodeController extends Controller
             'is_active' => 'required|boolean'
         ]);
 
-        Periode::find($id)->update([
+        PeriodeModel::find($id)->update([
             'periode_id' => $request->periode_id,
             'periode_name' => $request->periode_name,
             'is_active' => $request->is_active,
@@ -144,14 +144,14 @@ class PeriodeController extends Controller
 
     public function destroy(string $id)
     {
-        $check = Periode::find($id);
+        $check = PeriodeModel::find($id);
 
         if (!$check) {
             return redirect('/periode')->with('error', 'Data periode tidak ditemukan');
         }
 
         try {
-            Periode::destroy($id);
+            PeriodeModel::destroy($id);
             return redirect('/periode')->with('success', 'Data periode berhasil dihapus');
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect('/periode')->with('error', 'Data periode gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini');
@@ -160,13 +160,13 @@ class PeriodeController extends Controller
 
     public function show_ajax(string $id)
     {
-        $periode = Periode::find($id);
+        $periode = PeriodeModel::find($id);
         return view('periode.show_ajax', ['periode' => $periode]);
     }
     
     public function create_ajax()
     {
-        $periodes = Periode::select('periode_id', 'periode_name')->get();
+        $periodes = PeriodeModel::select('periode_id', 'periode_name')->get();
 
         return view('periode.create_ajax', ['periodes' => $periodes]);
     }
@@ -190,7 +190,7 @@ class PeriodeController extends Controller
                 ]);
             }
 
-            Periode::create($request->all());
+            PeriodeModel::create($request->all());
             return response()->json([
                 'status' => true,
                 'message' => 'Data periode berhasil disimpan'
@@ -200,7 +200,7 @@ class PeriodeController extends Controller
 
     public function edit_ajax(string $id)
     {
-        $periode = Periode::find($id);
+        $periode = PeriodeModel::find($id);
         return view('periode.edit_ajax', ['periode' => $periode]);
     }
 
@@ -222,7 +222,7 @@ class PeriodeController extends Controller
                 ]);
             }
             
-            $check = Periode::find($id);
+            $check = PeriodeModel::find($id);
             if ($check) {
                 $check->update($request->all());
                 return response()->json([
@@ -241,7 +241,7 @@ class PeriodeController extends Controller
 
     public function confirm_ajax(string $id)
     {
-        $periode = Periode::find($id);
+        $periode = PeriodeModel::find($id);
 
         return view('periode.confirm_ajax', ['periode' => $periode]);
     }
@@ -249,7 +249,7 @@ class PeriodeController extends Controller
     public function delete_ajax(Request $request, $id)
     {
         if ($request->ajax() || $request->wantsJson()) {
-            $periode = Periode::find($id);
+            $periode = PeriodeModel::find($id);
 
             if ($periode) {
                 try {
@@ -321,7 +321,7 @@ class PeriodeController extends Controller
                 }
     
                 if (count($insert) > 0) {
-                    Periode::insertOrIgnore($insert);
+                    PeriodeModel::insertOrIgnore($insert);
                 }
     
                 return response()->json([
@@ -340,7 +340,7 @@ class PeriodeController extends Controller
 
     public function export_excel()
     {
-        $periodes = Periode::select(
+        $periodes = PeriodeModel::select(
             'periode_id',
             'periode_name',
             'is_active'
@@ -391,7 +391,7 @@ class PeriodeController extends Controller
     }
 
     public function export_pdf(){
-        $periodes = Periode::select(
+        $periodes = PeriodeModel::select(
             'periode_id',
             'periode_name',
             'is_active'

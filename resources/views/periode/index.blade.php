@@ -25,7 +25,7 @@
             <table class="table table-bordered table-striped table-hover table-sm" id="table_periode">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>NO</th>
                         <th>ID Periode</th>
                         <th>Nama Periode</th>
                         <th>Status</th>
