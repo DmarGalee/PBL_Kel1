@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{{ config('app.name', 'SILATAS Polinema') }}</title>
+        <title>{{ config('app.name', 'SILATAS POLINEMA') }}</title>
         <meta name="csrf-token" content="{{ csrf_token() }}"> 
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
         <link rel="stylesheet" href="{{ asset('adminlte/plugins/fontawesome-free/css/all.min.css') }}">
@@ -14,6 +14,7 @@
         <link rel="stylesheet" href="{{ asset('adminlte/plugins/daterangepicker/daterangepicker.css') }}">
         <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
         <link rel="stylesheet" href="{{ asset('adminlte/dist/css/adminlte.min.css') }}">
+        <link rel="shortcut icon" href="https://siakad.polinema.ac.id/favicon.jpg"/>
         @stack('css') <!--digunakan untuk menyisipkan blok CSS tambahan dari bagian tampilan (view) lain ke dalam bagian ini. -->
     </head>
 <body class="hold-transition sidebar-mini">
@@ -28,7 +29,9 @@
     <!-- Brand Logo -->
     <a href="{{ url('/') }}" class="brand-link">
       <img src="{{ asset('adminlte/dist/img/AdminLTELogo.png')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">SILATAS Polinema</span>
+<span class="brand-text font-weight-bold">
+  SILATAS <span style="color: rgb(41, 205, 255);">POLINEMA</span>
+</span>
     </a>
 
     <!-- Sidebar -->
