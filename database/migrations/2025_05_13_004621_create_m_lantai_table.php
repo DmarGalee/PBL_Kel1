@@ -11,7 +11,8 @@ return new class extends Migration {
             $table->id('lantai_id');
             $table->string('lantai_nomor'); // Contoh: "Lantai 1", "B1", dst
             $table->text('deskripsi')->nullable(); // Opsional
-            $table->foreignId('gedung_id')->constrained('m_gedung')->onDelete('cascade');
+            $table->unsignedBigInteger('gedung_id');
+            $table->foreign('gedung_id')->references('gedung_id')->on('m_gedung')->onDelete('cascade');
             $table->timestamps();
         });
     }
