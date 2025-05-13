@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\PeriodeController;
+use App\Http\Controllers\LantaiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -65,7 +66,18 @@ Route::middleware(['auth'])->group(function () { //artinya semua route di dalam 
 
          //route lantai
          Route::group(['prefix' => 'lantai'], function () {
-          
+          Route::get('/', [LantaiController::class, 'index']);
+          Route::post('/list', [LantaiController::class, 'list']);
+          Route::get('/create_ajax', [LantaiController::class, 'create_ajax']); // Ajax form create
+          Route::post('/ajax', [LantaiController::class, 'store_ajax']); // Ajax store
+          Route::get('/{id}/edit_ajax', [LantaiController::class, 'edit_ajax']); // Ajax form edit
+          Route::put('/{id}/update_ajax', [LantaiController::class, 'update_ajax']); // Ajax update
+          Route::get('/{id}/delete_ajax', [LantaiController::class, 'confirm_ajax']); // Ajax form confirm
+          Route::delete('/{id}/delete_ajax', [LantaiController::class, 'delete_ajax']); // Ajax delete
+          Route::get('/import', [LantaiController::class, 'import']);
+          Route::post('/import_ajax', [LantaiController::class, 'import_ajax']);
+          Route::get('/export_excel', [LantaiController::class, 'export_excel']); // export excel
+          Route::get('/export_pdf', [LantaiController::class, 'export_pdf']); // export pdf
         });
 
          //route ruang
