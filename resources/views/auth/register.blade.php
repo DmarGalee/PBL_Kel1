@@ -9,12 +9,19 @@
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/fontawesome-free/css/all.min.css') }}">
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
   <link rel="stylesheet" href="{{ asset('adminlte/dist/css/adminlte.min.css') }}">
+  <link rel="shortcut icon" href="https://siakad.polinema.ac.id/favicon.jpg"/>
+
 </head>
 <body class="hold-transition register-page">
 <div class="register-box">
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
-      <a href="#" class="h1"><b>SILATAS Polinema</b></a>
+     <a href="#">
+  <span class="brand-text font-weight-bold" style="font-size: 2.25rem;">
+    SILATAS <span style="color: rgb(41, 205, 255);">POLINEMA</span>
+  </span>
+</a>
+
     </div>
     <div class="card-body">
       <p class="login-box-msg">Register akun baru</p>

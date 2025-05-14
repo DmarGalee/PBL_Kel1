@@ -19,13 +19,19 @@
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('adminlte/dist/css/adminlte.min.css') }}">
+    <link rel="shortcut icon" href="https://siakad.polinema.ac.id/favicon.jpg"/>
+
 </head>
 
 <body class="hold-transition login-page">
     <div class="login-box">
         <div class="card card-outline card-primary">
             <div class="card-header text-center">
-                <a href="{{ url('/') }}" class="h1"><b>SILATAS Polinema</b></a>
+                <a href="#">
+  <span class="brand-text font-weight-bold" style="font-size: 2.25rem;">
+    SILATAS <span style="color: rgb(41, 205, 255);">POLINEMA</span>
+  </span>
+</a>
             </div>
             <div class="card-body">
                 <p class="login-box-msg">Sign in to start your session</p>
