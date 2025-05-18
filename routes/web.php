@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\LantaiController;
+use App\Http\Controllers\GedungController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
@@ -80,9 +81,21 @@ Route::middleware(['auth'])->group(function () { //artinya semua route di dalam 
         });
 
         //route gedung
-         Route::group(['prefix' => 'gedung'], function () {
-          
+        Route::group(['prefix' => 'gedung'], function () {
+            Route::get('/', [GedungController::class, 'index']); // menampilkan halaman awal Gedung
+            Route::post('/list', [GedungController::class, 'list']); // menampilkan data Gedung dalam bentuk json untuk datatable
+            Route::get('/create_ajax', [GedungController::class, 'create_ajax']); // menampilkan halaman form tambah Gedung ajax
+            Route::post('/ajax', [GedungController::class, 'store_ajax']); // menyimpan data Gedung baru ajax
+            Route::get('/{id}/show_ajax', [GedungController::class, 'show_ajax']); // menampilkan detail Gedung ajax
+            Route::get('/{id}/edit_ajax', [GedungController::class, 'edit_ajax']); // menampilkan halaman form edit Gedung ajax
+            Route::put('/{id}/update_ajax', [GedungController::class, 'update_ajax']); // menyimpan perubahan data Gedung ajax
+            Route::get('/{id}/delete_ajax', [GedungController::class, 'confirm_ajax']); // untuk tampilan form confirm delete Gedung ajax
+            Route::delete('/{id}/delete_ajax', [GedungController::class, 'delete_ajax']); // menghapus data Gedung ajax
+            Route::post('/import_ajax', [GedungController::class, 'import_ajax']); // menyimpan data Gedung dari file import
+            Route::get('/export_excel', [GedungController::class, 'export_excel']); // ajax export excel
+            Route::get('/export_pdf', [GedungController::class, 'export_pdf']); // ajax export pdf
         });
+
 
          //route lantai
          Route::group(['prefix' => 'lantai'], function () {
