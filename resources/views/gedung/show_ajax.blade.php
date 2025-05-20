@@ -45,7 +45,7 @@
                             @if($gedung->description)
                                 {{ $gedung->description }}
                             @else
-                                <span class="text-muted">Tidak ada deskripsi</span>
+                                <span class="text-muted">Tidak ada deskripsi!</span>
                             @endif
                         </td>
                     </tr>

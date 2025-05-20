@@ -75,7 +75,7 @@ $(document).ready(function() {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'Terjadi kesalahan saat mengupload file'
+                        text: 'Terjadi kesalahan saat mengupload file!!'
                     });
                 }
             });

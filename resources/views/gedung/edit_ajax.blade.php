@@ -9,7 +9,7 @@
             <div class="modal-body">
                 <div class="alert alert-danger">
                     <h5><i class="icon fas fa-ban"></i> Kesalahan!!!</h5>
-                    Data yang anda cari tidak ditemukan
+                    Data yang anda cari tidak ditemukan!!
                 </div>
                 <a href="{{ url('/gedung') }}" class="btn btn-warning">Kembali</a>
             </div>

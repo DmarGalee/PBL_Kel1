@@ -89,7 +89,7 @@
                 <th class="text-center">ID Gedung</th>
                 <th class="text-center">Kode Gedung</th>
                 <th class="text-center">Nama Gedung</th>
-                <th class="text-center">Deskripsi</th>
+                <th class="text-center">Deskripsii</th>
             </tr>
         </thead>
         <tbody>
