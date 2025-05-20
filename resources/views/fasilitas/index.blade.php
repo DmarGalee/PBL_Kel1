@@ -6,9 +6,9 @@
             <h3 class="card-title">Daftar Fasilitas</h3>
             <div class="card-tools">
                 <button onclick="modalAction('{{ url('/fasilitas/import') }}')" class="btn btn-info">Import Fasilitas</button>
-                <a href="{{ url('/fasilitas/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export (Excel)</a>
-                <a href="{{ url('/fasilitas/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export (PDF)</a>
-                <button onclick="modalAction('{{ url('/fasilitas/create_ajax') }}')" class="btn btn-success">Tambah Data</button>           
+                <a href="{{ url('/fasilitas/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export Fasilitas (Excel)</a>
+                <a href="{{ url('/fasilitas/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export Fasilitas (PDF)</a>
+                <button onclick="modalAction('{{ url('/fasilitas/create_ajax') }}')" class="btn btn-success">Tambah Data Ajax</button>           
             </div>
         </div>
         <div class="card-body">
@@ -114,24 +114,20 @@
                     searchable: true
                 },
                 {
-                    data: "ruang.ruang_nama",
+                    data: "ruang_nama",  // Changed from "ruang.ruang_nama"
                     className: "",
                     width: "15%",
                     orderable: true,
                     searchable: true,
-                    render: function(data, type, row) {
-                        return data ? data : '-';
-                    }
+                    defaultContent: "-"  // Added default content
                 },
                 {
-                    data: "kategori.kategori_nama",
+                    data: "kategori_nama",  // Changed from "kategori.kategori_nama"
                     className: "",
                     width: "15%",
                     orderable: true,
                     searchable: true,
-                    render: function(data, type, row) {
-                        return data ? data : '-';
-                    }
+                    defaultContent: "-"  // Added default content
                 },
                 {
                     data: "deskripsi",
@@ -139,9 +135,7 @@
                     width: "25%",
                     orderable: true,
                     searchable: true,
-                    render: function(data) {
-                        return data ? data : '-';
-                    }
+                    defaultContent: "-"  // Added default content
                 },
                 {
                     data: "status",
@@ -154,9 +148,10 @@
                             return '<span class="badge badge-success">Baik</span>';
                         } else if(data == 'rusak_ringan') {
                             return '<span class="badge badge-warning">Rusak Ringan</span>';
-                        } else {
+                        } else if(data == 'rusak_berat') {
                             return '<span class="badge badge-danger">Rusak Berat</span>';
                         }
+                        return '-';  // Default return if status is unknown
                     }
                 },
                 {
@@ -165,19 +160,7 @@
                     width: "20%",
                     orderable: false,
                     searchable: false,
-                    render: function(data, type, row) {
-                        return `
-                            <button onclick="modalAction('${row.show_url}')" class="btn btn-sm btn-info">
-                                <i class="fa fa-eye"></i>
-                            </button>
-                            <button onclick="modalAction('${row.edit_url}')" class="btn btn-sm btn-warning">
-                                <i class="fa fa-edit"></i>
-                            </button>
-                            <button onclick="modalAction('${row.delete_url}')" class="btn btn-sm btn-danger">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        `;
-                    }
+                    defaultContent: "-"  // Added default content
                 }
             ]
         });
