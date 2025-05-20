@@ -4,8 +4,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Tambah Data Gedung</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
@@ -18,14 +19,6 @@
                     <input value="" type="text" name="gedung_nama" id="gedung_nama" class="form-control" required>
                     <small id="error-gedung_nama" class="error-text form-text text-danger"></small>
                 </div>
-                <div class="form-group">
-                    <label>Waktu Dibuat</label>
-                    <input value="{{ now() }}" type="text" name="created_at" id="created_at" class="form-control" readonly>
-                </div>
-                <div class="form-group">
-                    <label>Waktu Diupdate</label>
-                    <input value="{{ now() }}" type="text" name="updated_at" id="updated_at" class="form-control" readonly>
-                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" data-dismiss="modal" class="btn btn-warning">Batal</button>
@@ -36,29 +29,31 @@
 </form>
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         $("#form-tambah").validate({
             rules: {
-                gedung_kode: { required: true, minlength: 1, maxlength: 10 },
+                gedung_kode: { required: true, minlength: 2, maxlength: 50 },
                 gedung_nama: { required: true, minlength: 3, maxlength: 100 }
             },
-            submitHandler: function (form) {
+            submitHandler: function(form, event) {
+                event.preventDefault(); // Mencegah reload halaman
                 $.ajax({
                     url: form.action,
                     type: form.method,
                     data: $(form).serialize(),
-                    success: function (response) {
+                    success: function(response) {
                         if (response.status) {
+                            $('#form-tambah')[0].reset(); // Reset form setelah sukses
                             $('#myModal').modal('hide');
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil',
                                 text: response.message
                             });
-                            dataGedung.ajax.reload();
+                            dataGedung.ajax.reload(); // Reload DataTables
                         } else {
                             $('.error-text').text('');
-                            $.each(response.msgField, function (prefix, val) {
+                            $.each(response.msgField, function(prefix, val) {
                                 $('#error-' + prefix).text(val[0]);
                             });
                             Swal.fire({
@@ -72,14 +67,14 @@
                 return false;
             },
             errorElement: 'span',
-            errorPlacement: function (error, element) {
+            errorPlacement: function(error, element) {
                 error.addClass('invalid-feedback');
                 element.closest('.form-group').append(error);
             },
-            highlight: function (element, errorClass, validClass) {
+            highlight: function(element, errorClass, validClass) {
                 $(element).addClass('is-invalid');
             },
-            unhighlight: function (element, errorClass, validClass) {
+            unhighlight: function(element, errorClass, validClass) {
                 $(element).removeClass('is-invalid');
             }
         });
