@@ -1,30 +1,29 @@
-<form action="{{ url('/gedung/ajax') }}" method="POST" id="form-tambah">
+<form action="{{ url('/gedung/ajax') }}" method="POST" id="form-create"> 
     @csrf
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Tambah Data Gedung</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
+                <!-- gedung_kode -->
                 <div class="form-group">
                     <label>Kode Gedung</label>
-                    <input value="" type="text" name="gedung_kode" id="gedung_kode" class="form-control" required>
+                    <input type="text" name="gedung_kode" id="gedung_kode" class="form-control" required>
                     <small id="error-gedung_kode" class="error-text form-text text-danger"></small>
                 </div>
+                <!-- gedung_nama -->
                 <div class="form-group">
                     <label>Nama Gedung</label>
-                    <input value="" type="text" name="gedung_nama" id="gedung_nama" class="form-control" required>
+                    <input type="text" name="gedung_nama" id="gedung_nama" class="form-control" required>
                     <small id="error-gedung_nama" class="error-text form-text text-danger"></small>
                 </div>
+                <!-- description -->
                 <div class="form-group">
-                    <label>Waktu Dibuat</label>
-                    <input value="{{ now() }}" type="text" name="created_at" id="created_at" class="form-control" readonly>
-                </div>
-                <div class="form-group">
-                    <label>Waktu Diupdate</label>
-                    <input value="{{ now() }}" type="text" name="updated_at" id="updated_at" class="form-control" readonly>
+                    <label>Deskripsi</label>
+                    <textarea name="description" id="description" class="form-control" rows="3" required></textarea>
+                    <small id="error-description" class="error-text form-text text-danger"></small>
                 </div>
             </div>
             <div class="modal-footer">
@@ -37,11 +36,13 @@
 
 <script>
     $(document).ready(function () {
-        $("#form-tambah").validate({
+        $("#form-create").validate({
             rules: {
-                gedung_kode: { required: true, minlength: 1, maxlength: 10 },
-                gedung_nama: { required: true, minlength: 3, maxlength: 100 }
+                gedung_kode: { required: true, minlength: 3 },
+                gedung_nama: { required: true, minlength: 3 },
+                description: { required: true, minlength: 5 }
             },
+
             submitHandler: function (form) {
                 $.ajax({
                     url: form.action,
@@ -55,7 +56,10 @@
                                 title: 'Berhasil',
                                 text: response.message
                             });
-                            dataGedung.ajax.reload();
+                            // Jika kamu menggunakan datatable atau ajax reload
+                            if(typeof dataGedung !== 'undefined'){
+                                dataGedung.ajax.reload();
+                            }
                         } else {
                             $('.error-text').text('');
                             $.each(response.msgField, function (prefix, val) {

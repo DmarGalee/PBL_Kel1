@@ -1,5 +1,5 @@
 @empty($gedung)
-    <div id="modal-delete" class="modal-dialog modal-lg" role="document">
+    <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Kesalahan</h5>
@@ -10,43 +10,58 @@
             <div class="modal-body">
                 <div class="alert alert-danger">
                     <h5><i class="icon fas fa-ban"></i> Kesalahan!!!</h5>
-                    Data yang anda cari tidak ditemukan
+                    Data gedung yang anda cari tidak ditemukan
                 </div>
                 <a href="{{ url('/gedung') }}" class="btn btn-warning">Kembali</a>
             </div>
         </div>
     </div>
 @else
-    <div class="modal-header">
-        <h5 class="modal-title">Data Gedung</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <table class="table table-sm table-bordered table-striped">
-            <tr>
-                <th class="text-right col-3">Kode Gedung :</th>
-                <td class="col-9">{{ $gedung->gedung_kode }}</td>
-            </tr>
-            <tr>
-                <th class="text-right col-3">Nama Gedung :</th>
-                <td class="col-9">{{ $gedung->gedung_nama }}</td>
-            </tr>
-            <tr>
-                <th class="text-right col-3">Waktu Dibuat :</th>
-                <td class="col-9">{{ $gedung->created_at }}</td>
-            </tr>
-            <tr>
-                <th class="text-right col-3">Waktu Diperbarui :</th>
-                <td class="col-9">{{ $gedung->updated_at }}</td>
-            </tr>
-        </table>
-    </div>
-    <div class="modal-footer">
-        <button onclick="modalAction('{{ url('/gedung/' . $gedung->gedung_id . '/edit_ajax') }}')" 
-            class="btn btn-success btn-sm">Edit
-        </button>
-        <button type="button" data-dismiss="modal" class="btn btn-primary btn-sm">Close</button>
+    <div id="modal-master" class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Detail Gedung</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th width="25%">ID Gedung</th>
+                        <td>{{ $gedung->gedung_id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Kode Gedung</th>
+                        <td>{{ $gedung->gedung_kode }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nama Gedung</th>
+                        <td>{{ $gedung->gedung_nama }}</td>
+                    </tr>
+                    <tr>
+                        <th>Deskripsi</th>
+                        <td>
+                            @if($gedung->description)
+                                {{ $gedung->description }}
+                            @else
+                                <span class="text-muted">Tidak ada deskripsi</span>
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Dibuat Pada</th>
+                        <td>{{ $gedung->created_at->format('d-m-Y H:i:s') }}</td>
+                    </tr>
+                    <tr>
+                        <th>Diupdate Pada</th>
+                        <td>{{ $gedung->updated_at->format('d-m-Y H:i:s') }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-primary">Tutup</button>
+            </div>
+        </div>
     </div>
 @endempty

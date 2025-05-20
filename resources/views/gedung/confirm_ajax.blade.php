@@ -2,15 +2,13 @@
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Kesalahan</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title">Kesalahan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
                 <div class="alert alert-danger">
-                    <h5><i class="icon fas fa-ban"></i> Kesalahan!!!</h5>
-                    Data yang Anda cari tidak ditemukan
+                    <h5><i class="fas fa-ban"></i> Kesalahan!!!</h5>
+                    Data yang anda cari tidak ditemukan
                 </div>
                 <a href="{{ url('/gedung') }}" class="btn btn-warning">Kembali</a>
             </div>
@@ -23,64 +21,51 @@
         <div id="modal-master" class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Hapus Data Gedung</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <h5 class="modal-title">Hapus Data Gedung</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-warning">
-                        <h5><i class="icon fas fa-ban"></i> Konfirmasi !!!</h5>
-                        Apakah Anda ingin menghapus data seperti di bawah ini?
+                        <h5><i class="fas fa-ban"></i> Konfirmasi !!!</h5>
+                        Apakah Anda ingin menghapus data berikut?
                     </div>
-                    <table class="table table-sm table-bordered table-striped">
-                        <tr>
-                            <th class="text-right col-3">Kode Gedung :</th>
-                            <td class="col-9">{{ $gedung->gedung_kode }}</td>
-                        </tr>
-                        <tr>
-                            <th class="text-right col-3">Nama Gedung :</th>
-                            <td class="col-9">{{ $gedung->gedung_nama }}</td>
-                        </tr>
-                        <tr>
-                            <th class="text-right col-3">Waktu Dibuat :</th>
-                            <td class="col-9">{{ $gedung->created_at }}</td>
-                        </tr>
-                        <tr>
-                            <th class="text-right col-3">Waktu Diperbarui :</th>
-                            <td class="col-9">{{ $gedung->updated_at }}</td>
-                        </tr>
+                    <table class="table-sm table-bordered table-striped">
+                        <tr><th class="text-right col-3">Kode Gedung :</th><td class="col-9">{{ $gedung->gedung_kode }}</td></tr>
+                        <tr><th class="text-right col-3">Nama Gedung :</th><td class="col-9">{{ $gedung->gedung_nama }}</td></tr>
+                        <tr><th class="text-right col-3">Deskripsi :</th><td class="col-9">{{ $gedung->description }}</td></tr>
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" data-dismiss="modal" class="btn btn-warning">Batal</button>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary">Ya, Hapus</button>
                 </div>
             </div>
         </div>
     </form>
+
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $("#form-delete").validate({
                 rules: {},
-                submitHandler: function (form) {
+                submitHandler: function(form) {
                     $.ajax({
                         url: form.action,
                         type: form.method,
                         data: $(form).serialize(),
-                        success: function (response) {
-                            if (response.status) {
-                                $('#modal-master').modal('hide');
+                        success: function(response) {
+                            if(response.status){
+                                $('#myModal').modal('hide');
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Berhasil',
                                     text: response.message
                                 });
+                                // Jika kamu menggunakan DataTable untuk gedung, ganti dataGedung dengan variabel table datamu
                                 dataGedung.ajax.reload();
                             } else {
                                 $('.error-text').text('');
-                                $.each(response.msgField, function (prefix, val) {
-                                    $('#error-' + prefix).text(val[0]);
+                                $.each(response.msgField, function(prefix, val) {
+                                    $('#error-'+prefix).text(val[0]);
                                 });
                                 Swal.fire({
                                     icon: 'error',

@@ -92,7 +92,7 @@ Route::middleware(['auth'])->group(function () { //artinya semua route di dalam 
             Route::get('/{id}/delete_ajax', [GedungController::class, 'confirm_ajax']); // untuk tampilan form confirm delete Gedung ajax
             Route::delete('/{id}/delete_ajax', [GedungController::class, 'delete_ajax']); // menghapus data Gedung ajax
             Route::post('/import_ajax', [GedungController::class, 'import_ajax']); // menyimpan data Gedung dari file import
-            Route::get('/export_excel', [GedungController::class, 'export_excel']); // ajax export excel
+            Route::get('/export_excel', [LevelController::class,'export_excel']); // ajax export excel
             Route::get('/export_pdf', [GedungController::class, 'export_pdf']); // ajax export pdf
         });
 

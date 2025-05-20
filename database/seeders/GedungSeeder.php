@@ -13,24 +13,28 @@ class GedungSeeder extends Seeder
             [
                 'gedung_kode' => 'GDG-SPL',
                 'gedung_nama' => 'Gedung Sipil',
+                'description' => 'gedung 8 lantai',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
                 'gedung_kode' => 'GDG-AKT',
                 'gedung_nama' => 'Gedung Akuntansi',
+                'description' => 'gedung 4 lantai',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
                 'gedung_kode' => 'GDG-MSN',
                 'gedung_nama' => 'Gedung Mesin',
+                'description' => 'gedung 8 lantai',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
                 'gedung_kode' => 'GDG-ADM',
                 'gedung_nama' => 'Gedung Administrasi Niaga',
+                'description' => 'gedung 3 lantai',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
