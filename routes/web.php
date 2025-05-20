@@ -7,6 +7,7 @@ use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\LantaiController;
 use App\Http\Controllers\GedungController;
 use App\Http\Controllers\RuangController;
+use App\Http\Controllers\FasilitasController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
@@ -145,6 +146,24 @@ Route::middleware(['auth'])->group(function () { //artinya semua route di dalam 
             Route::get('/export_excel', [PeriodeController::class,'export_excel']); // ajax export excel
             Route::get('/export_pdf', [PeriodeController::class,'export_pdf']); // ajax export pdf
         });
+
+        //route fasilitas
+         Route::group(['prefix' => 'fasilitas'], function () {
+         Route::get('/', [FasilitasController::class, 'index']); // menampilkan halaman awal Level
+            Route::post('/list', [FasilitasController::class, 'list']); // menampilkan data Level dalam bentuk json untuk datatable
+            Route::get('/create_ajax', [FasilitasController::class, 'create_ajax']); // menampilkan halaman form tambah Level ajax
+            Route::post('/ajax', [FasilitasController::class, 'store_ajax']); // menyimpan data Level baru ajax
+            Route::get('/{id}/show_ajax', [FasilitasController::class, 'show_ajax']); // menampilkan detail Level ajax
+            Route::get('/{id}/edit_ajax', [FasilitasController::class, 'edit_ajax']); // menampilkan halaman form edit Level ajax
+            Route::put('/{id}/update_ajax', [FasilitasController::class, 'update_ajax']); // menyimpan perubahan data Level ajax
+            Route::get('/{id}/delete_ajax', [FasilitasController::class, 'confirm_ajax']); // untuk tampilan form confirm delete Level ajax
+            Route::delete('/{id}/delete_ajax', [FasilitasController::class, 'delete_ajax']); // menghapus data Level ajax
+            Route::post('/import_ajax', [FasilitasController::class, 'import_ajax']); // menyimpan data Level dari file import
+            Route::get('/export_excel', [FasilitasController::class,'export_excel']); // ajax export excel
+            Route::get('/export_pdf', [FasilitasController::class,'export_pdf']); // ajax export pdf
+        });
+
+
     });
 
     // Pelapor Mahasiswa, Dosen, Tenga Kependidikan

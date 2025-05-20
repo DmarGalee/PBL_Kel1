@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             LantaiSeeder::class,
             RuangSeeder::class,
             KategoriSeeder::class,
+            FasilitasSeeder::class,
         ]);
         // \App\Models\User::factory(10)->create();
 
