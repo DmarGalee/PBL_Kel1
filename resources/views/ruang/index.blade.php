@@ -94,14 +94,14 @@
                 {
                     data: "ruang_nama",
                     className: "",
-                    width: "60%",
+                    width: "30%",
                     orderable: true,
                     searchable: true
                 },
                 {
                     data: "lantai_id",
                     className: "text-center",
-                    width: "15%",
+                    width: "20%",
                     orderable: true,
                     searchable: false,
                     render: function(data) {
@@ -111,7 +111,7 @@
                 {
                     data: "aksi",
                     className: "text-center",
-                    width: "10%",
+                    width: "30%",
                     orderable: false,
                     searchable: false
                 }

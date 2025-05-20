@@ -11,24 +11,6 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class GedungController extends Controller
 {
-    private $breadcrumb;
-    private $page;
-    private $activeMenu;
-
-    public function __construct()
-    {
-        $this->breadcrumb = (object) [
-            'title' => '',
-            'list' => []
-        ];
-
-        $this->page = (object) [
-            'title' => ''
-        ];
-
-        $this->activeMenu = 'gedung';
-    }
-
     public function index()
     {
         $activeMenu = 'gedung';
@@ -36,21 +18,19 @@ class GedungController extends Controller
             'title' => 'Data Gedung',
             'list' => ['Home', 'Gedung']
         ];
-        
-        $page = (object) [
-            'title' => 'Daftar Gedung'
-        ];
+
+        $gedung = GedungModel::all();
 
         return view('gedung.index', [
             'activeMenu' => $activeMenu,
             'breadcrumb' => $breadcrumb,
-            'page' => $page
+            'gedung' => $gedung
         ]);
     }
 
     public function list(Request $request)
     {
-        $gedung = GedungModel::select('gedung_id', 'gedung_nama', 'gedung_kode', 'description');
+        $gedung = GedungModel::select('gedung_id', 'gedung_kode', 'gedung_nama', 'description');
 
         return DataTables::of($gedung)
             ->addIndexColumn()
@@ -272,13 +252,12 @@ class GedungController extends Controller
         return redirect('/');
     }
 
-    public function export_excel() {
-        // ambil data gedung yang akan di export
+    public function export_excel()
+    {
         $gedung = GedungModel::select('gedung_kode', 'gedung_nama', 'description')
             ->orderBy('gedung_kode')
             ->get();
 
-        // load library excel
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
@@ -291,7 +270,7 @@ class GedungController extends Controller
 
         $no = 1;
         $baris = 2;
-        foreach ($gedung as $key => $value) {
+        foreach ($gedung as $value) {
             $sheet->setCellValue('A'.$baris, $no);
             $sheet->setCellValue('B'.$baris, $value->gedung_kode);
             $sheet->setCellValue('C'.$baris, $value->gedung_nama);
@@ -301,10 +280,10 @@ class GedungController extends Controller
         }
 
         foreach(range('A', 'D') as $columnID) {
-            $sheet->getColumnDimension($columnID)->setAutoSize(true); // set auto size untuk kolom
+            $sheet->getColumnDimension($columnID)->setAutoSize(true);
         }
 
-        $sheet->setTitle('Data Gedung'); 
+        $sheet->setTitle('Data Gedung');
 
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $filename = 'Data Gedung '.date('Y-m-d H:i:s').'.xlsx';
@@ -314,7 +293,7 @@ class GedungController extends Controller
         header('Cache-Control: max-age=0');
         header('Cache-Control: max-age=1');
         header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-        header('Last-Modified: ' . gmdate('D, d M Y H:i:s'). ' GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
         header('Cache-Control: cache, must-revalidate');
         header('Pragma: public');
 

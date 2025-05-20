@@ -21,6 +21,12 @@
                     <input type="text" name="gedung_nama" id="gedung_nama" class="form-control" required>
                     <small id="error-gedung_nama" class="error-text form-text text-danger"></small>
                 </div>
+                <!-- description -->
+                <div class="form-group">
+                    <label>Deskripsi</label>
+                    <textarea name="description" id="description" class="form-control" rows="3"></textarea>
+                    <small id="error-description" class="error-text form-text text-danger"></small>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" data-dismiss="modal" class="btn btn-warning">Batal</button>
@@ -32,27 +38,35 @@
 
 <script>
     $(document).ready(function() {
-        $("#form-tambah").validate({
+        $("#form-create").validate({  <!-- Changed from form-tambah to form-create to match form ID -->
             rules: {
                 gedung_kode: { required: true, minlength: 2, maxlength: 50 },
-                gedung_nama: { required: true, minlength: 3, maxlength: 100 }
+                gedung_nama: { required: true, minlength: 3, maxlength: 100 },
+                description: { maxlength: 500 }  <!-- Added validation for description -->
+            },
+            messages: {  <!-- Added custom messages -->
+                description: {
+                    maxlength: "Deskripsi tidak boleh lebih dari 500 karakter"
+                }
             },
             submitHandler: function(form, event) {
-                event.preventDefault(); // Mencegah reload halaman
+                event.preventDefault();
                 $.ajax({
                     url: form.action,
                     type: form.method,
                     data: $(form).serialize(),
                     success: function(response) {
                         if (response.status) {
-                            $('#form-tambah')[0].reset(); // Reset form setelah sukses
+                            $('#form-create')[0].reset();  <!-- Changed from form-tambah to form-create -->
                             $('#myModal').modal('hide');
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil',
                                 text: response.message
                             });
-                            dataGedung.ajax.reload(); // Reload DataTables
+                            if (typeof dataGedung !== 'undefined') {
+                                dataGedung.ajax.reload();
+                            }
                         } else {
                             $('.error-text').text('');
                             $.each(response.msgField, function(prefix, val) {
@@ -64,6 +78,13 @@
                                 text: response.message
                             });
                         }
+                    },
+                    error: function(xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Terjadi kesalahan pada server'
+                        });
                     }
                 });
                 return false;
