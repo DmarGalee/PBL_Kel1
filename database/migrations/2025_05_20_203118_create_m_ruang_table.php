@@ -15,7 +15,6 @@ return new class extends Migration
             $table->bigIncrements('ruang_id');          // BIGINT AUTO_INCREMENT
             $table->string('ruang_nama', 100);          // VARCHAR(100)
             $table->unsignedBigInteger('lantai_id');    // BIGINT unsigned
-
             $table->timestamps();                       // created_at & updated_at
         });
     }
