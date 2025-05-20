@@ -6,6 +6,7 @@ use App\Http\Controllers\LevelController;
 use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\LantaiController;
 use App\Http\Controllers\GedungController;
+use App\Http\Controllers\RuangController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
@@ -114,8 +115,19 @@ Route::middleware(['auth'])->group(function () { //artinya semua route di dalam 
         });
 
          //route ruang
-         Route::group(['prefix' => 'ruang'], function () {
-          
+        Route::group(['prefix' => 'ruang'], function () {
+            Route::get('/', [RuangController::class, 'index']); // menampilkan halaman awal Ruang
+            Route::post('/list', [RuangController::class, 'list']); // menampilkan data Ruang dalam bentuk json untuk datatable
+            Route::get('/create_ajax', [RuangController::class, 'create_ajax']); // menampilkan halaman form tambah Ruang ajax
+            Route::post('/ajax', [RuangController::class, 'store_ajax']); // menyimpan data Ruang baru ajax
+            Route::get('/{id}/show_ajax', [RuangController::class, 'show_ajax']); // menampilkan detail Ruang ajax
+            Route::get('/{id}/edit_ajax', [RuangController::class, 'edit_ajax']); // menampilkan halaman form edit Ruang ajax
+            Route::put('/{id}/update_ajax', [RuangController::class, 'update_ajax']); // menyimpan perubahan data Ruang ajax
+            Route::get('/{id}/delete_ajax', [RuangController::class, 'confirm_ajax']); // untuk tampilan form confirm delete Ruang ajax
+            Route::delete('/{id}/delete_ajax', [RuangController::class, 'delete_ajax']); // menghapus data Ruang ajax
+            Route::post('/import_ajax', [RuangController::class, 'import_ajax']); // menyimpan data Ruang dari file import
+            Route::get('/export_excel', [RuangController::class, 'export_excel']); // ajax export excel
+            Route::get('/export_pdf', [RuangController::class, 'export_pdf']); // ajax export pdf
         });
 
         //route periode
