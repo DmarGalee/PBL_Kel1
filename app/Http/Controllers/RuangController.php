@@ -206,15 +206,17 @@ class RuangController extends Controller
         $lantai = LantaiModel::all(); // Get all lantai for reference
         return view('ruang.import', ['lantai' => $lantai]);
     }
-
+    
     public function import_ajax(Request $request)
     {
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
-                'file_ruang' => ['required', 'mimes:xlsx', 'max:1024']
+                'file_ruang' => ['required', 'mimes:xlsx', 'max:1024'],
             ];
-
-            $validator = Validator::make($request->all(), $rules);
+            $messages = [
+                'file_ruang.required' => 'Silakan pilih file Excel untuk diunggah',
+            ];
+            $validator = Validator::make($request->all(), $rules, $messages);
             if ($validator->fails()) {
                 return response()->json([
                     'status' => false,
@@ -237,6 +239,10 @@ class RuangController extends Controller
             if (count($data) > 1) {
                 foreach ($data as $baris => $value) {
                     if ($baris > 1) {
+                        if (empty($value['A']) || strlen($value['A']) > 255) {
+                            $errors[] = "Baris $baris: Nama ruang tidak valid (kosong atau terlalu panjang)";
+                            continue;
+                        }
                         // Validate lantai_id exists
                         if (!in_array($value['B'], $validLantai)) {
                             $errors[] = "Baris $baris: Lantai ID {$value['B']} tidak valid";
@@ -247,6 +253,7 @@ class RuangController extends Controller
                             'ruang_nama' => $value['A'],
                             'lantai_id' => $value['B'],
                             'created_at' => now(),
+                            'updated_at' => now(),
                         ];
                     }
                 }

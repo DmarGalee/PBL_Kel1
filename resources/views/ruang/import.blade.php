@@ -54,46 +54,67 @@
                 }
             },
             submitHandler: function(form) {
-                var formData = new FormData(form);
-                $.ajax({
-                    url: form.action,
-                    type: form.method,
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        if(response.status) {
-                            $('#myModal').modal('hide');
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil',
-                                text: response.message,
-                                timer: 2000,
-                                showConfirmButton: false
-                            });
-                            dataRuang.ajax.reload();
-                        } else {
-                            $('.error-text').text('');
-                            $.each(response.msgField, function(prefix, val) {
-                                $('#error-'+prefix).text(val[0]);
-                            });
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Terjadi Kesalahan',
-                                text: response.message
-                            });
-                        }
-                    },
-                    error: function(xhr) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Terjadi kesalahan saat mengupload file'
-                        });
-                    }
+    var formData = new FormData(form);
+    console.log('FormData:', formData.get('file_ruang')); // Check if file is included
+    Swal.fire({
+        title: 'Mengunggah...',
+        text: 'Harap tunggu, file sedang diproses.',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+    $.ajax({
+        url: form.action,
+        type: form.method,
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            Swal.close();
+            if (response.status) {
+                $('#myModal').modal('hide');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: response.message,
+                    timer: 2000,
+                    showConfirmButton: false
                 });
-                return false;
-            },
+                dataRuang.ajax.reload();
+            } else {
+                $('.error-text').text('');
+                if (response.msgField) {
+                    $.each(response.msgField, function(prefix, val) {
+                        $('#error-' + prefix).text(val[0]);
+                    });
+                }
+                let errorMessage = response.message;
+                if (response.errors && response.errors.length > 0) {
+                    errorMessage += '<ul>';
+                    $.each(response.errors, function(index, error) {
+                        errorMessage += '<li>' + error + '</li>';
+                    });
+                    errorMessage += '</ul>';
+                }
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Terjadi Kesalahan',
+                    html: errorMessage
+                });
+            }
+        },
+        error: function(xhr) {
+            Swal.close();
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Terjadi kesalahan saat mengupload file'
+            });
+        }
+    });
+    return false;
+},
             errorElement: 'span',
             errorPlacement: function (error, element) {
                 error.addClass('invalid-feedback');

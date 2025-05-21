@@ -66,15 +66,40 @@ class LantaiController extends Controller
                 return $lantai->gedung->gedung_nama ?? '-';
             })
             ->addColumn('aksi', function ($row) {
+                $showUrl = url('/lantai/' . $row->lantai_id . '/show_ajax');
                 $editUrl = url('/lantai/' . $row->lantai_id . '/edit_ajax');
                 $deleteUrl = url('/lantai/' . $row->lantai_id . '/delete_ajax');
                 return '
+                    <button onclick="modalAction(\'' . $showUrl . '\')" class="btn btn-sm btn-primary">Show</button>
                     <button onclick="modalAction(\'' . $editUrl . '\')" class="btn btn-sm btn-primary">Edit</button>
                     <button onclick="modalAction(\'' . $deleteUrl . '\')" class="btn btn-sm btn-danger">Hapus</button>
                 ';
             })
             ->rawColumns(['aksi'])
             ->make(true);
+    }
+    public function show(string $id)
+{
+    $lantai = LantaiModel::find($id);
+
+    $breadcrumb = (object) [
+        'title' => 'Detail Lantai',
+        'list' => ['Home', 'Lantai', 'Detail']
+    ];
+
+    $page = (object) [
+        'title' => 'Detail Lantai'
+    ];
+
+    $activeMenu = 'lantai'; // Set menu yang sedang aktif
+
+    return view('lantai.show', ['breadcrumb' => $breadcrumb, 'page' => $page, 'lantai' => $lantai, 'activeMenu' => $activeMenu]);
+}
+
+    public function show_ajax(string $id)
+    {
+        $lantai = LantaiModel::find($id);
+        return view('lantai.show_ajax', ['lantai' => $lantai]);
     }
 
     public function create_ajax()
