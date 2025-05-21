@@ -5,7 +5,8 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Tambah Data Lantai</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span></button>
+                    <span aria-hidden="true">×</span>
+                </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
@@ -14,8 +15,8 @@
                     <small id="error-lantai_nomor" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
-                    <label>Deskripsi</label>
-                    <textarea name="deskripsi" id="deskripsi" class="form-control"></textarea>
+                    <label>Deskripsi Lantai</label>
+                    <textarea name="deskripsi" id="deskripsi" class="form-control" required></textarea>
                     <small id="error-deskripsi" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
@@ -38,55 +39,55 @@
 </form>
 
 <script>
-$(document).ready(function() {
-    $("#form-tambah").validate({
-        rules: {
-            lantai_nomor: { required: true, minlength: 3, maxlength: 50 },
-            deskripsi: { minlength: 5 },
-            gedung_id: { required: true }
-        },
-        submitHandler: function(form, event) {
-            event.preventDefault(); // Mencegah reload halaman
-            $.ajax({
-                url: form.action,
-                type: form.method,
-                data: $(form).serialize(),
-                success: function(response) {
-                    if (response.status) {
-                        $('#form-tambah')[0].reset(); // Reset form setelah sukses
-                        $('#myModal').modal('hide');
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil',
-                            text: response.message
-                        });
-                        dataLantai.ajax.reload(); // Reload DataTables
-                    } else {
-                        $('.error-text').text('');
-                        $.each(response.msgField, function(prefix, val) {
-                            $('#error-' + prefix).text(val[0]);
-                        });
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Terjadi Kesalahan',
-                            text: response.message
-                        });
+    $(document).ready(function() {
+        $("#form-tambah").validate({
+            rules: {
+                lantai_nomor: { required: true, minlength: 1, maxlength: 50 },
+                deskripsi: { required: true, minlength: 5 },
+                gedung_id: { required: true }
+            },
+            submitHandler: function(form, event) {
+                event.preventDefault(); // Mencegah reload halaman
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    data: $(form).serialize(),
+                    success: function(response) {
+                        if (response.status) {
+                            $('#form-tambah')[0].reset(); // Reset form setelah sukses
+                            $('#myModal').modal('hide');
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil',
+                                text: response.message
+                            });
+                            dataLantai.ajax.reload(); // Reload DataTables
+                        } else {
+                            $('.error-text').text('');
+                            $.each(response.msgField, function(prefix, val) {
+                                $('#error-' + prefix).text(val[0]);
+                            });
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Terjadi Kesalahan',
+                                text: response.message
+                            });
+                        }
                     }
-                }
-            });
-            return false;
-        },
-        errorElement: 'span',
-        errorPlacement: function(error, element) {
-            error.addClass('invalid-feedback');
-            element.closest('.form-group').append(error);
-        },
-        highlight: function(element, errorClass, validClass) {
-            $(element).addClass('is-invalid');
-        },
-        unhighlight: function(element, errorClass, validClass) {
-            $(element).removeClass('is-invalid');
-        }
+                });
+                return false;
+            },
+            errorElement: 'span',
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
     });
-});
 </script>

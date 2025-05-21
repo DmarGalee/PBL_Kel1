@@ -76,13 +76,13 @@ Route::middleware(['auth'])->group(function () { //artinya semua route di dalam 
             Route::get('/create_ajax', [LevelController::class, 'create_ajax']); // menampilkan halaman form tambah Level ajax
             Route::post('/ajax', [LevelController::class, 'store_ajax']); // menyimpan data Level baru ajax
             Route::get('/{id}/show_ajax', [LevelController::class, 'show_ajax']); // menampilkan detail Level ajax
-            Route::get('/{id}/edit_ajax', [LevelController::class, 'edit_ajax']); // menampilkan halaman form edit Level ajax
-            Route::put('/{id}/update_ajax', [LevelController::class, 'update_ajax']); // menyimpan perubahan data Level ajax
-            Route::get('/{id}/delete_ajax', [LevelController::class, 'confirm_ajax']); // untuk tampilan form confirm delete Level ajax
-            Route::delete('/{id}/delete_ajax', [LevelController::class, 'delete_ajax']); // menghapus data Level ajax
-            Route::post('/import_ajax', [LevelController::class, 'import_ajax']); // menyimpan data Level dari file import
-            Route::get('/export_excel', [LevelController::class,'export_excel']); // ajax export excel
-            Route::get('/export_pdf', [LevelController::class,'export_pdf']); // ajax export pdf
+            // Route::get('/{id}/edit_ajax', [LevelController::class, 'edit_ajax']); // menampilkan halaman form edit Level ajax
+            // Route::put('/{id}/update_ajax', [LevelController::class, 'update_ajax']); // menyimpan perubahan data Level ajax
+            // Route::get('/{id}/delete_ajax', [LevelController::class, 'confirm_ajax']); // untuk tampilan form confirm delete Level ajax
+            // Route::delete('/{id}/delete_ajax', [LevelController::class, 'delete_ajax']); // menghapus data Level ajax
+            // Route::post('/import_ajax', [LevelController::class, 'import_ajax']); // menyimpan data Level dari file import
+            // Route::get('/export_excel', [LevelController::class,'export_excel']); // ajax export excel
+            // Route::get('/export_pdf', [LevelController::class,'export_pdf']); // ajax export pdf
         });
 
         //route gedung

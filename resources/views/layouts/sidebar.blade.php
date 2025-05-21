@@ -48,6 +48,12 @@
                         <p>Data Level</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ url('/kategori') }}" class="nav-link {{ ($activeMenu == 'kategori') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-layer-group"></i>
+                        <p>Data Kategori</p>
+                    </a>
+                </li>
 
                 <li class="nav-header">Manajemen Lokasi</li>
                 <li class="nav-item">
