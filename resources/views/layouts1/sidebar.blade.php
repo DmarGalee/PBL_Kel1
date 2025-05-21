@@ -3,7 +3,9 @@
         <div class="sidebar-header position-relative">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="logo">
-                    <a href="index.html"><img src="./assets/compiled/svg/logo.svg" alt="Logo" srcset=""></a>
+                    <a href="index.html"><span class="brand-text font-weight-bold">
+  SILATAS <span style="color: rgb(41, 205, 255);">POLINEMA</span>
+</span></a>
                 </div>
                 <div class="theme-toggle d-flex gap-2 align-items-center mt-2">
                     <!-- Theme toggle icons -->

@@ -10,6 +10,7 @@ use App\Http\Controllers\RuangController;
 use App\Http\Controllers\FasilitasController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserController2;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +33,7 @@ Route::post('register', [AuthController::class, 'postRegister']);
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postlogin']);
 //logout
-Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
+Route::get('logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 
 
@@ -40,11 +41,13 @@ Route::middleware(['auth'])->group(function () { //artinya semua route di dalam 
     // masukkan semua route yang perlu autentikasi di sini
 
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+            Route::get('/template', [UserController2::class, 'index']);
 
       Route::middleware(['authorize:ADM'])->group(function () {
          
         //route user
         Route::group(['prefix' => 'user'], function () {
+            Route::get('/templates', [UserController2::class, 'index']);
             Route::get('/', [UserController::class, 'index']); // menampilkan halaman awal user
             Route::post('/list', [UserController::class, 'list']); // menampilkan data user dalam bentuk json untuk datables
             Route::get('/create', [UserController::class, 'create']); // menampilkan halaman form tambah user
