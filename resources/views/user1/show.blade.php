@@ -1,4 +1,4 @@
-@extends('layouts.template')
+@extends('layouts1.template')
 
 @section('content')
 <div class="card card-outline card-primary">
@@ -7,7 +7,7 @@
         <div class="card-tools"></div>
     </div>
     <div class="card-body">
-        @empty($gedung)
+        @empty($user)
         <div class="alert alert-danger alert-dismissible">
             <h5><i class="icon fas fa-ban"></i> Kesalahan!</h5>
             Data yang Anda cari tidak ditemukan.
@@ -16,27 +16,27 @@
         <table class="table table-bordered table-striped table-hover table-sm">
             <tr>
                 <th>ID</th>
-                <td>{{ $gedung->gedung_id }}</td>
+                <td>{{ $user->user_id }}</td>
             </tr>
             <tr>
-                <th>Kode Gedung</th>
-                <td>{{ $gedung->gedung_kode }}</td>
+                <th>Level</th>
+                <td>{{ $user->level->level_nama }}</td>
             </tr>
             <tr>
-                <th>Nama Gedung</th>
-                <td>{{ $gedung->gedung_nama }}</td>
+                <th>Username</th>
+                <td>{{ $user->username }}</td>
             </tr>
             <tr>
-                <th>Waktu Dibuat</th>
-                <td>{{ $gedung->created_at }}</td>
+                <th>Nama</th>
+                <td>{{ $user->nama }}</td>
             </tr>
             <tr>
-                <th>Waktu Diperbarui</th>
-                <td>{{ $gedung->updated_at }}</td>
+                <th>Password</th>
+                <td>********</td>
             </tr>
         </table>
         @endempty
-        <a href="{{ url('gedung') }}" class="btn btn-sm btn-default mt-2">Kembali</a>
+        <a href="{{ url('user') }}" class="btn btn-sm btn-default mt-2">Kembali</a>
     </div>
 </div>
 @endsection

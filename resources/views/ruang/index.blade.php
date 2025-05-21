@@ -3,12 +3,12 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Daftar Gedung</h3>
+            <h3 class="card-title">Daftar Ruang</h3>
             <div class="card-tools">
-                <button onclick="modalAction('{{ url('/gedung/import') }}')" class="btn btn-info">Import Gedung</button>
-                <a href="{{ url('/gedung/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export Gedung (Excel)</a>
-                <a href="{{ url('/gedung/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export Gedung (PDF)</a>
-                <button onclick="modalAction('{{ url('/gedung/create_ajax') }}')" class="btn btn-success">Tambah Data Ajax</button>           
+                <button onclick="modalAction('{{ url('/ruang/import') }}')" class="btn btn-info">Import Ruang</button>
+                <a href="{{ url('/ruang/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export Ruang (Excel)</a>
+                <a href="{{ url('/ruang/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export Ruang (PDF)</a>
+                <button onclick="modalAction('{{ url('/ruang/create_ajax') }}')" class="btn btn-success">Tambah Data Ajax</button>           
             </div>
         </div>
         <div class="card-body">
@@ -16,15 +16,15 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group form-group-sm row text-sm mb-0">
-                            <label for="filter_gedung" class="col-md-1 col-form-label">Filter</label>
+                            <label for="filter_lantai" class="col-md-1 col-form-label">Filter</label>
                             <div class="col-md-3">
-                                <select name="filter_gedung" class="form-control form-control-sm filter_gedung">
-                                    <option value="">- Semua Gedung -</option>
-                                    @foreach($gedung as $g)
-                                    <option value="{{ $g->gedung_id }}">{{ $g->gedung_nama }}</option>
+                                <select name="filter_lantai" class="form-control form-control-sm filter_lantai">
+                                    <option value="">- Semua Lantai -</option>
+                                    @foreach($lantai as $l)
+                                    <option value="{{ $l->lantai_id }}">Lantai {{ $l->lantai_id }}</option>
                                     @endforeach
                                 </select>
-                                <small class="form-text text-muted">Gedung</small>
+                                <small class="form-text text-muted">Lantai</small>
                             </div>
                         </div>
                     </div>
@@ -38,12 +38,13 @@
                 <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
             
-            <table class="table table-bordered table-sm table-striped table-hover" id="table_gedung">
+            <table class="table table-bordered table-sm table-striped table-hover" id="table_ruang">
                 <thead>
                     <tr>
                         <th style="text-align: center;">No</th>
-                        <th style="text-align: center;">Kode Gedung</th>
-                        <th style="text-align: center;">Nama Gedung</th>
+                        <th style="text-align: center;">ID Ruang</th>
+                        <th style="text-align: center;">Nama Ruang</th>
+                        <th style="text-align: center;">Lantai</th>
                         <th style="text-align: center;">Aksi</th>
                     </tr>
                 </thead>
@@ -62,17 +63,17 @@
         });
     }
              
-    var dataGedung;
+    var dataRuang;
     $(document).ready(function() {
-        dataGedung = $('#table_gedung').DataTable({
+        dataRuang = $('#table_ruang').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
-                "url": "{{ url('gedung/list') }}",
+                "url": "{{ url('ruang/list') }}",
                 "dataType": "json",
                 "type": "POST",
                 "data": function (d) {
-                    d.filter_gedung = $('.filter_gedung').val();
+                    d.filter_lantai = $('.filter_lantai').val();
                 }
             },
             columns: [
@@ -84,18 +85,28 @@
                     searchable: false
                 },
                 {
-                    data: "gedung_kode",
+                    data: "ruang_id",
                     className: "text-center",
-                    width: "15%",
+                    width: "10%",
+                    orderable: true,
+                    searchable: false
+                },
+                {
+                    data: "ruang_nama",
+                    className: "",
+                    width: "30%",
                     orderable: true,
                     searchable: true
                 },
                 {
-                    data: "gedung_nama",
-                    className: "",
-                    width: "40%",
+                    data: "lantai_id",
+                    className: "text-center",
+                    width: "20%",
                     orderable: true,
-                    searchable: true
+                    searchable: false,
+                    render: function(data) {
+                        return 'Lantai ' + data;
+                    }
                 },
                 {
                     data: "aksi",
@@ -104,18 +115,17 @@
                     orderable: false,
                     searchable: false
                 }
-            ],
-            order: [[1, 'asc']] // Urutkan berdasarkan kode gedung
+            ]
         });
 
-        $('#table_gedung_filter input').unbind().bind().on('keyup', function(e){
+        $('#table_ruang_filter input').unbind().bind().on('keyup', function(e){
             if(e.keyCode == 13){ // enter key
-                dataGedung.search(this.value).draw();
+                dataRuang.search(this.value).draw();
             }           
         });
 
-        $('.filter_gedung').change(function(){
-            dataGedung.draw();
+        $('.filter_lantai').change(function(){
+            dataRuang.draw();
         });
     });
 </script>

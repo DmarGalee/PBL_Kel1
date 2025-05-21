@@ -14,7 +14,6 @@
         }
         td, th {
             padding: 4px 3px;
-            vertical-align: top;
         }
         th {
             text-align: left;
@@ -57,6 +56,12 @@
         .border-all td {
             border: 1px solid;
         }
+        .font-bold {
+            font-weight: bold;
+        }
+        .mb-1 {
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
@@ -68,41 +73,44 @@
                     $imageData = base64_encode(file_get_contents($imagePath));
                     $src = 'data: ' . mime_content_type($imagePath) . ';base64,' . $imageData;
                 @endphp
-                <img src="{{ $src }}" width="100" alt="Logo Polinema">
+                <img src="{{ $src }}" width="100">
             </td>
             <td width="85%">
                 <span class="text-center d-block font-11 font-bold mb-1">KEMENTERIAN PENDIDIKAN, KEBUDAYAAN, RISET, DAN TEKNOLOGI</span>
                 <span class="text-center d-block font-13 font-bold mb-1">POLITEKNIK NEGERI MALANG</span>
                 <span class="text-center d-block font-10">Jl. Soekarno-Hatta No. 9 Malang 65141</span>
-                <span class="text-center d-block font-10">Telepon (0341) 404424 Pes. 101-105, 0341-404420, Fax. (0341) 404420</span>
+                <span class="text-center d-block font-10">Telepon (0341) 404424 Pes. 101- 105, 0341-404420, Fax. (0341) 404420</span>
                 <span class="text-center d-block font-10">Laman: www.polinema.ac.id</span>
             </td>
         </tr>
     </table>
 
-    <h3 class="text-center">LAPORAN DATA GEDUNG</h3>
+    <h3 class="text-center">LAPORAN DATA RUANG</h3>
 
     <table class="border-all">
         <thead>
             <tr>
                 <th class="text-center">No</th>
-                <th class="text-center">ID Gedung</th>
-                <th class="text-center">Kode Gedung</th>
-                <th class="text-center">Nama Gedung</th>
-                <th class="text-center">Deskripsii</th>
+                <th class="text-center">ID Ruang</th>
+                <th class="text-center">Nama Ruang</th>
+                <th class="text-center">Lantai</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($gedung as $g)
+            @foreach($ruang as $r)
                 <tr>
                     <td class="text-center">{{ $loop->iteration }}</td>
-                    <td class="text-center">{{ $g->gedung_id }}</td>
-                    <td class="text-center">{{ $g->gedung_kode }}</td>
-                    <td>{{ $g->gedung_nama }}</td>
-                    <td>{{ $g->description }}</td>
+                    <td class="text-center">{{ $r->ruang_id }}</td>
+                    <td>{{ $r->ruang_nama }}</td>
+                    <td class="text-center">Lantai {{ $r->lantai_id }}</td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+    
+    <div style="margin-top: 30px; float: right; text-align: center; width: 200px;">
+        <div>Malang, {{ date('d F Y') }}</div>
+        <div style="margin-top: 60px;">(_______________________)</div>
+    </div>
 </body>
 </html>

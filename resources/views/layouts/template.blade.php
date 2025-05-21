@@ -29,9 +29,11 @@
     <!-- Brand Logo -->
     <a href="{{ url('/') }}" class="brand-link">
       <img src="{{ asset('adminlte/dist/img/AdminLTELogo.png')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-<span class="brand-text font-weight-bold">
+<span class="brand-text font-weight-bold" style="font-size: 0.8rem;">
   SILATAS <span style="color: rgb(41, 205, 255);">POLINEMA</span>
 </span>
+
+
     </a>
 
     <!-- Sidebar -->

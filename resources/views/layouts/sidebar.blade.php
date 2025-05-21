@@ -78,6 +78,13 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a href="{{ url('/fasilitas') }}" class="nav-link {{ ($activeMenu == 'fasilitas') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-laptop-house"></i>
+                        <p> Data Fasilitas</p>
+                    </a>
+                </li>
+
             @endif
 
             @if(Auth::user()->level->level_kode === 'MHS')

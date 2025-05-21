@@ -2,42 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\GedungModel;
+use App\Models\KategoriModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-class GedungController extends Controller
+class KategoriController extends Controller
 {
     public function index()
     {
-        $activeMenu = 'gedung';
+        $activeMenu = 'kategori';
         $breadcrumb = (object) [
-            'title' => 'Data Gedung',
-            'list' => ['Home', 'Gedung']
+            'title' => 'Data Kategori',
+            'list' => ['Home', 'Kategori']
         ];
 
-        $gedung = GedungModel::all();
-
-        return view('gedung.index', [
+        return view('kategori.index', [
             'activeMenu' => $activeMenu,
-            'breadcrumb' => $breadcrumb,
-            'gedung' => $gedung
+            'breadcrumb' => $breadcrumb
         ]);
     }
 
     public function list(Request $request)
     {
-        $gedung = GedungModel::select('gedung_id', 'gedung_kode', 'gedung_nama', 'description');
+        $kategori = KategoriModel::select('kategori_id', 'kategori_kode', 'kategori_nama');
 
-        return DataTables::of($gedung)
+        return DataTables::of($kategori)
             ->addIndexColumn()
-            ->addColumn('aksi', function ($gedung) {
-                $btn  = '<button onclick="modalAction(\'' . url('/gedung/' . $gedung->gedung_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
-                $btn .= '<button onclick="modalAction(\'' . url('/gedung/' . $gedung->gedung_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
-                $btn .= '<button onclick="modalAction(\'' . url('/gedung/' . $gedung->gedung_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
+            ->addColumn('aksi', function ($kategori) {
+                $btn  = '<button onclick="modalAction(\'' . url('/kategori/' . $kategori->kategori_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/kategori/' . $kategori->kategori_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/kategori/' . $kategori->kategori_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
                 return $btn;
             })
             ->rawColumns(['aksi'])
@@ -47,19 +44,19 @@ class GedungController extends Controller
     public function create()
     {
         $breadcrumb = (object) [
-            'title' => 'Tambah Gedung',
-            'list' => ['Home', 'Gedung', 'Tambah']
+            'title' => 'Tambah Kategori',
+            'list' => ['Home', 'Kategori', 'Tambah']
         ];
 
         $page = (object) [
-            'title' => 'Tambah Gedung baru'
+            'title' => 'Tambah Kategori baru'
         ];
 
-        $activeMenu = 'gedung';
+        $activeMenu = 'kategori';
 
-        return view('gedung.create', [
-            'breadcrumb' => $breadcrumb, 
-            'page' => $page, 
+        return view('kategori.create', [
+            'breadcrumb' => $breadcrumb,
+            'page' => $page,
             'activeMenu' => $activeMenu
         ]);
     }
@@ -67,28 +64,26 @@ class GedungController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'gedung_kode' => 'required|unique:m_gedung',
-            'gedung_nama' => 'required',
-            'description' => 'nullable',
+            'kategori_kode' => 'required|unique:m_kategori,kategori_kode|max:10',
+            'kategori_nama' => 'required|max:50'
         ]);
 
-        GedungModel::create($request->all());
+        KategoriModel::create($request->all());
 
-        return redirect('/gedung')->with('success', 'Data berhasil ditambahkan');
+        return redirect('/kategori')->with('success', 'Data berhasil ditambahkan');
     }
 
     public function create_ajax()
     {
-        return view('gedung.create_ajax');
+        return view('kategori.create_ajax');
     }
 
     public function store_ajax(Request $request)
     {
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
-                'gedung_kode' => ['required', 'min:3', 'max:20', 'unique:m_gedung,gedung_kode'],
-                'gedung_nama' => ['required', 'string', 'max:100'],
-                'description' => ['nullable', 'string'],
+                'kategori_kode' => ['required', 'string', 'max:10', 'unique:m_kategori,kategori_kode'],
+                'kategori_nama' => ['required', 'string', 'max:50']
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -100,7 +95,7 @@ class GedungController extends Controller
                 ]);
             }
 
-            GedungModel::create($request->all());
+            KategoriModel::create($request->all());
 
             return response()->json([
                 'status' => true,
@@ -113,17 +108,16 @@ class GedungController extends Controller
 
     public function edit_ajax(string $id)
     {
-        $gedung = GedungModel::find($id);
-        return view('gedung.edit_ajax')->with('gedung', $gedung);
+        $kategori = KategoriModel::find($id);
+        return view('kategori.edit_ajax', ['kategori' => $kategori]);
     }
 
     public function update_ajax(Request $request, string $id)
     {
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
-                'gedung_kode' => 'required|min:3|unique:m_gedung,gedung_kode,' . $id . ',gedung_id',
-                'gedung_nama' => 'required|min:3',
-                'description' => 'nullable|string',
+                'kategori_kode' => 'required|max:10|unique:m_kategori,kategori_kode,' . $id . ',kategori_id',
+                'kategori_nama' => 'required|max:50'
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -136,7 +130,7 @@ class GedungController extends Controller
                 ]);
             }
 
-            $check = GedungModel::find($id);
+            $check = KategoriModel::find($id);
             if ($check) {
                 $check->update($request->all());
                 return response()->json([
@@ -155,31 +149,31 @@ class GedungController extends Controller
 
     public function confirm_ajax(string $id)
     {
-        $gedung = GedungModel::find($id);
-        return view('gedung.confirm_ajax')->with('gedung', $gedung);
+        $kategori = KategoriModel::find($id);
+        return view('kategori.confirm_ajax')->with('kategori', $kategori);
     }
 
     public function delete_ajax(Request $request, $id)
     {
         if ($request->ajax() || $request->wantsJson()) {
-            $gedung = GedungModel::find($id);
-            if ($gedung) {
+            $kategori = KategoriModel::find($id);
+            if ($kategori) {
                 try {
-                    $gedung->delete();
+                    $kategori->delete();
                     return response()->json([
-                        'status'=> true,
-                        'message'=> 'Data berhasil dihapus'
+                        'status' => true,
+                        'message' => 'Data berhasil dihapus'
                     ]);
                 } catch (\Illuminate\Database\QueryException $e) {
                     return response()->json([
-                        'status'=> false,
-                        'message'=> 'Data gedung gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini'
+                        'status' => false,
+                        'message' => 'Data kategori gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini'
                     ]);
                 } 
             } else {
                 return response()->json([
-                    'status'=> false,
-                    'message'=> 'Data tidak ditemukan'
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan'
                 ]);
             }
         }
@@ -188,20 +182,20 @@ class GedungController extends Controller
 
     public function show_ajax(string $id)
     {
-        $gedung = GedungModel::find($id);
-        return view('gedung.show_ajax', ['gedung' => $gedung]);
+        $kategori = KategoriModel::find($id);
+        return view('kategori.show_ajax', ['kategori' => $kategori]);
     }
 
     public function import()
     {
-        return view('gedung.import');
+        return view('kategori.import');
     }
 
     public function import_ajax(Request $request)
     {
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
-                'file_gedung' => ['required', 'mimes:xlsx', 'max:1024']
+                'file_kategori' => ['required', 'mimes:xlsx', 'max:1024']
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -213,7 +207,7 @@ class GedungController extends Controller
                 ]);
             }
 
-            $file = $request->file('file_gedung');
+            $file = $request->file('file_kategori');
             $reader = IOFactory::createReader('Xlsx');
             $reader->setReadDataOnly(true);
             $spreadsheet = $reader->load($file->getRealPath());
@@ -221,20 +215,35 @@ class GedungController extends Controller
             $data = $sheet->toArray(null, false, true, true);
 
             $insert = [];
+            $errors = [];
+
             if (count($data) > 1) {
                 foreach ($data as $baris => $value) {
                     if ($baris > 1) {
+                        // Validate data
+                        if (empty($value['A']) || empty($value['B'])) {
+                            $errors[] = "Baris $baris: Kode dan Nama Kategori harus diisi";
+                            continue;
+                        }
+
                         $insert[] = [
-                            'gedung_kode' => $value['A'],
-                            'gedung_nama' => $value['B'],
-                            'description' => $value['C'],
+                            'kategori_kode' => $value['A'],
+                            'kategori_nama' => $value['B'],
                             'created_at' => now(),
                         ];
                     }
                 }
 
+                if (count($errors)) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Beberapa data tidak valid',
+                        'errors' => $errors
+                    ]);
+                }
+
                 if (count($insert) > 0) {
-                    GedungModel::insertOrIgnore($insert);
+                    KategoriModel::insertOrIgnore($insert);
                 }
 
                 return response()->json([
@@ -254,39 +263,37 @@ class GedungController extends Controller
 
     public function export_excel()
     {
-        $gedung = GedungModel::select('gedung_kode', 'gedung_nama', 'description')
-            ->orderBy('gedung_kode')
+        $kategori = KategoriModel::select('kategori_id', 'kategori_kode', 'kategori_nama')
+            ->orderBy('kategori_id')
             ->get();
 
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
         $sheet->setCellValue('A1', 'No');
-        $sheet->setCellValue('B1', 'Kode Gedung');
-        $sheet->setCellValue('C1', 'Nama Gedung');
-        $sheet->setCellValue('D1', 'Deskripsi');
+        $sheet->setCellValue('B1', 'Kode Kategori');
+        $sheet->setCellValue('C1', 'Nama Kategori');
 
-        $sheet->getStyle('A1:D1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:C1')->getFont()->setBold(true);
 
         $no = 1;
         $baris = 2;
-        foreach ($gedung as $value) {
+        foreach ($kategori as $value) {
             $sheet->setCellValue('A'.$baris, $no);
-            $sheet->setCellValue('B'.$baris, $value->gedung_kode);
-            $sheet->setCellValue('C'.$baris, $value->gedung_nama);
-            $sheet->setCellValue('D'.$baris, $value->description);
+            $sheet->setCellValue('B'.$baris, $value->kategori_kode);
+            $sheet->setCellValue('C'.$baris, $value->kategori_nama);
             $baris++;
             $no++;
         }
 
-        foreach(range('A', 'D') as $columnID) {
+        foreach(range('A', 'C') as $columnID) {
             $sheet->getColumnDimension($columnID)->setAutoSize(true);
         }
 
-        $sheet->setTitle('Data Gedung');
+        $sheet->setTitle('Data Kategori');
 
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $filename = 'Data Gedung '.date('Y-m-d H:i:s').'.xlsx';
+        $filename = 'Data Kategori '.date('Y-m-d H:i:s').'.xlsx';
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="'.$filename.'"');
@@ -303,14 +310,14 @@ class GedungController extends Controller
 
     public function export_pdf()
     {
-        $gedung = GedungModel::select('gedung_kode', 'gedung_nama', 'description')
-            ->orderBy('gedung_kode')
+        $kategori = KategoriModel::select('kategori_id', 'kategori_kode', 'kategori_nama')
+            ->orderBy('kategori_id')
             ->get();
 
-        $pdf = Pdf::loadView('gedung.export_pdf', ['gedung' => $gedung]);
+        $pdf = Pdf::loadView('kategori.export_pdf', ['kategori' => $kategori]);
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption("isRemoteEnabled", true);
         $pdf->render();
-        return $pdf->stream('Data Gedung '.date('Y-m-d H:i:s').'.pdf');
+        return $pdf->stream('Data Kategori '.date('Y-m-d H:i:s').'.pdf');
     }
 }

@@ -2,42 +2,47 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\GedungModel;
+use App\Models\RuangModel;
+use App\Models\LantaiModel; // Add this for the relationship
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-class GedungController extends Controller
+class RuangController extends Controller
 {
     public function index()
     {
-        $activeMenu = 'gedung';
+        $activeMenu = 'ruang';
         $breadcrumb = (object) [
-            'title' => 'Data Gedung',
-            'list' => ['Home', 'Gedung']
+            'title' => 'Data Ruang',
+            'list' => ['Home', 'Ruang']
         ];
 
-        $gedung = GedungModel::all();
+        $lantai = LantaiModel::all();
 
-        return view('gedung.index', [
+        return view('ruang.index', [
             'activeMenu' => $activeMenu,
             'breadcrumb' => $breadcrumb,
-            'gedung' => $gedung
+            'lantai' => $lantai
         ]);
     }
 
     public function list(Request $request)
     {
-        $gedung = GedungModel::select('gedung_id', 'gedung_kode', 'gedung_nama', 'description');
+        $ruang = RuangModel::with('lantai') // Eager load the relationship
+            ->select('ruang_id', 'ruang_nama', 'lantai_id');
 
-        return DataTables::of($gedung)
+        return DataTables::of($ruang)
             ->addIndexColumn()
-            ->addColumn('aksi', function ($gedung) {
-                $btn  = '<button onclick="modalAction(\'' . url('/gedung/' . $gedung->gedung_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
-                $btn .= '<button onclick="modalAction(\'' . url('/gedung/' . $gedung->gedung_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
-                $btn .= '<button onclick="modalAction(\'' . url('/gedung/' . $gedung->gedung_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
+            ->addColumn('lantai_nama', function ($ruang) { // Add lantai name column
+                return $ruang->lantai->lantai_nama ?? '-';
+            })
+            ->addColumn('aksi', function ($ruang) {
+                $btn  = '<button onclick="modalAction(\'' . url('/ruang/' . $ruang->ruang_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/ruang/' . $ruang->ruang_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/ruang/' . $ruang->ruang_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
                 return $btn;
             })
             ->rawColumns(['aksi'])
@@ -47,48 +52,49 @@ class GedungController extends Controller
     public function create()
     {
         $breadcrumb = (object) [
-            'title' => 'Tambah Gedung',
-            'list' => ['Home', 'Gedung', 'Tambah']
+            'title' => 'Tambah Ruang',
+            'list' => ['Home', 'Ruang', 'Tambah']
         ];
 
         $page = (object) [
-            'title' => 'Tambah Gedung baru'
+            'title' => 'Tambah Ruang baru'
         ];
 
-        $activeMenu = 'gedung';
+        $activeMenu = 'ruang';
+        $lantai = LantaiModel::all(); // Get all lantai for dropdown
 
-        return view('gedung.create', [
-            'breadcrumb' => $breadcrumb, 
-            'page' => $page, 
-            'activeMenu' => $activeMenu
+        return view('ruang.create', [
+            'breadcrumb' => $breadcrumb,
+            'page' => $page,
+            'activeMenu' => $activeMenu,
+            'lantai' => $lantai // Pass lantai to view
         ]);
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'gedung_kode' => 'required|unique:m_gedung',
-            'gedung_nama' => 'required',
-            'description' => 'nullable',
+            'ruang_nama' => 'required|unique:m_ruang',
+            'lantai_id' => 'required|integer|exists:m_lantai,lantai_id',
         ]);
 
-        GedungModel::create($request->all());
+        RuangModel::create($request->all());
 
-        return redirect('/gedung')->with('success', 'Data berhasil ditambahkan');
+        return redirect('/ruang')->with('success', 'Data berhasil ditambahkan');
     }
 
     public function create_ajax()
     {
-        return view('gedung.create_ajax');
+        $lantai = LantaiModel::all(); // Get all lantai for dropdown
+        return view('ruang.create_ajax', ['lantai' => $lantai]);
     }
 
     public function store_ajax(Request $request)
     {
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
-                'gedung_kode' => ['required', 'min:3', 'max:20', 'unique:m_gedung,gedung_kode'],
-                'gedung_nama' => ['required', 'string', 'max:100'],
-                'description' => ['nullable', 'string'],
+                'ruang_nama' => ['required', 'string', 'max:100', 'unique:m_ruang,ruang_nama'],
+                'lantai_id' => ['required', 'integer', 'exists:m_lantai,lantai_id'],
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -100,7 +106,7 @@ class GedungController extends Controller
                 ]);
             }
 
-            GedungModel::create($request->all());
+            RuangModel::create($request->all());
 
             return response()->json([
                 'status' => true,
@@ -113,17 +119,20 @@ class GedungController extends Controller
 
     public function edit_ajax(string $id)
     {
-        $gedung = GedungModel::find($id);
-        return view('gedung.edit_ajax')->with('gedung', $gedung);
+        $ruang = RuangModel::find($id);
+        $lantai = LantaiModel::all(); // Get all lantai for dropdown
+        return view('ruang.edit_ajax', [
+            'ruang' => $ruang,
+            'lantai' => $lantai
+        ]);
     }
 
     public function update_ajax(Request $request, string $id)
     {
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
-                'gedung_kode' => 'required|min:3|unique:m_gedung,gedung_kode,' . $id . ',gedung_id',
-                'gedung_nama' => 'required|min:3',
-                'description' => 'nullable|string',
+                'ruang_nama' => 'required|min:3|unique:m_ruang,ruang_nama,' . $id . ',ruang_id',
+                'lantai_id' => 'required|integer|exists:m_lantai,lantai_id',
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -136,7 +145,7 @@ class GedungController extends Controller
                 ]);
             }
 
-            $check = GedungModel::find($id);
+            $check = RuangModel::find($id);
             if ($check) {
                 $check->update($request->all());
                 return response()->json([
@@ -155,31 +164,31 @@ class GedungController extends Controller
 
     public function confirm_ajax(string $id)
     {
-        $gedung = GedungModel::find($id);
-        return view('gedung.confirm_ajax')->with('gedung', $gedung);
+        $ruang = RuangModel::with('lantai')->find($id); // Load relationship
+        return view('ruang.confirm_ajax')->with('ruang', $ruang);
     }
 
     public function delete_ajax(Request $request, $id)
     {
         if ($request->ajax() || $request->wantsJson()) {
-            $gedung = GedungModel::find($id);
-            if ($gedung) {
+            $ruang = RuangModel::find($id);
+            if ($ruang) {
                 try {
-                    $gedung->delete();
+                    $ruang->delete();
                     return response()->json([
-                        'status'=> true,
-                        'message'=> 'Data berhasil dihapus'
+                        'status' => true,
+                        'message' => 'Data berhasil dihapus'
                     ]);
                 } catch (\Illuminate\Database\QueryException $e) {
                     return response()->json([
-                        'status'=> false,
-                        'message'=> 'Data gedung gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini'
+                        'status' => false,
+                        'message' => 'Data ruang gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini'
                     ]);
                 } 
             } else {
                 return response()->json([
-                    'status'=> false,
-                    'message'=> 'Data tidak ditemukan'
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan'
                 ]);
             }
         }
@@ -188,20 +197,21 @@ class GedungController extends Controller
 
     public function show_ajax(string $id)
     {
-        $gedung = GedungModel::find($id);
-        return view('gedung.show_ajax', ['gedung' => $gedung]);
+        $ruang = RuangModel::with('lantai')->find($id); // Load relationship
+        return view('ruang.show_ajax', ['ruang' => $ruang]);
     }
 
     public function import()
     {
-        return view('gedung.import');
+        $lantai = LantaiModel::all(); // Get all lantai for reference
+        return view('ruang.import', ['lantai' => $lantai]);
     }
 
     public function import_ajax(Request $request)
     {
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
-                'file_gedung' => ['required', 'mimes:xlsx', 'max:1024']
+                'file_ruang' => ['required', 'mimes:xlsx', 'max:1024']
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -213,7 +223,7 @@ class GedungController extends Controller
                 ]);
             }
 
-            $file = $request->file('file_gedung');
+            $file = $request->file('file_ruang');
             $reader = IOFactory::createReader('Xlsx');
             $reader->setReadDataOnly(true);
             $spreadsheet = $reader->load($file->getRealPath());
@@ -221,20 +231,36 @@ class GedungController extends Controller
             $data = $sheet->toArray(null, false, true, true);
 
             $insert = [];
+            $errors = [];
+            $validLantai = LantaiModel::pluck('lantai_id')->toArray(); // Get valid lantai IDs
+
             if (count($data) > 1) {
                 foreach ($data as $baris => $value) {
                     if ($baris > 1) {
+                        // Validate lantai_id exists
+                        if (!in_array($value['B'], $validLantai)) {
+                            $errors[] = "Baris $baris: Lantai ID {$value['B']} tidak valid";
+                            continue;
+                        }
+
                         $insert[] = [
-                            'gedung_kode' => $value['A'],
-                            'gedung_nama' => $value['B'],
-                            'description' => $value['C'],
+                            'ruang_nama' => $value['A'],
+                            'lantai_id' => $value['B'],
                             'created_at' => now(),
                         ];
                     }
                 }
 
+                if (count($errors)) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Beberapa data tidak valid',
+                        'errors' => $errors
+                    ]);
+                }
+
                 if (count($insert) > 0) {
-                    GedungModel::insertOrIgnore($insert);
+                    RuangModel::insertOrIgnore($insert);
                 }
 
                 return response()->json([
@@ -254,27 +280,28 @@ class GedungController extends Controller
 
     public function export_excel()
     {
-        $gedung = GedungModel::select('gedung_kode', 'gedung_nama', 'description')
-            ->orderBy('gedung_kode')
+        $ruang = RuangModel::with('lantai') // Load relationship
+            ->select('ruang_id', 'ruang_nama', 'lantai_id')
+            ->orderBy('ruang_id')
             ->get();
 
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
         $sheet->setCellValue('A1', 'No');
-        $sheet->setCellValue('B1', 'Kode Gedung');
-        $sheet->setCellValue('C1', 'Nama Gedung');
-        $sheet->setCellValue('D1', 'Deskripsi');
+        $sheet->setCellValue('B1', 'Nama Ruang');
+        $sheet->setCellValue('C1', 'Lantai');
+        $sheet->setCellValue('D1', 'Lantai ID');
 
         $sheet->getStyle('A1:D1')->getFont()->setBold(true);
 
         $no = 1;
         $baris = 2;
-        foreach ($gedung as $value) {
+        foreach ($ruang as $value) {
             $sheet->setCellValue('A'.$baris, $no);
-            $sheet->setCellValue('B'.$baris, $value->gedung_kode);
-            $sheet->setCellValue('C'.$baris, $value->gedung_nama);
-            $sheet->setCellValue('D'.$baris, $value->description);
+            $sheet->setCellValue('B'.$baris, $value->ruang_nama);
+            $sheet->setCellValue('C'.$baris, $value->lantai->lantai_nama ?? '-');
+            $sheet->setCellValue('D'.$baris, $value->lantai_id);
             $baris++;
             $no++;
         }
@@ -283,10 +310,10 @@ class GedungController extends Controller
             $sheet->getColumnDimension($columnID)->setAutoSize(true);
         }
 
-        $sheet->setTitle('Data Gedung');
+        $sheet->setTitle('Data Ruang');
 
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $filename = 'Data Gedung '.date('Y-m-d H:i:s').'.xlsx';
+        $filename = 'Data Ruang '.date('Y-m-d H:i:s').'.xlsx';
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="'.$filename.'"');
@@ -303,14 +330,15 @@ class GedungController extends Controller
 
     public function export_pdf()
     {
-        $gedung = GedungModel::select('gedung_kode', 'gedung_nama', 'description')
-            ->orderBy('gedung_kode')
+        $ruang = RuangModel::with('lantai') // Load relationship
+            ->select('ruang_id', 'ruang_nama', 'lantai_id')
+            ->orderBy('ruang_id')
             ->get();
 
-        $pdf = Pdf::loadView('gedung.export_pdf', ['gedung' => $gedung]);
+        $pdf = Pdf::loadView('ruang.export_pdf', ['ruang' => $ruang]);
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption("isRemoteEnabled", true);
         $pdf->render();
-        return $pdf->stream('Data Gedung '.date('Y-m-d H:i:s').'.pdf');
+        return $pdf->stream('Data Ruang '.date('Y-m-d H:i:s').'.pdf');
     }
 }

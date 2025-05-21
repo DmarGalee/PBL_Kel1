@@ -1,38 +1,49 @@
-@empty($gedung)
+@empty($fasilitas)
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Kesalahan</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Kesalahan</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
                 <div class="alert alert-danger">
                     <h5><i class="fas fa-ban"></i> Kesalahan!!!</h5>
-                    Data yang anda cari tidak ditemukan!
+                    Data fasilitas yang anda cari tidak ditemukan
                 </div>
-                <a href="{{ url('/gedung') }}" class="btn btn-warning">Kembali</a>
+                <a href="{{ url('/fasilitas') }}" class="btn btn-warning">Kembali</a>
             </div>
         </div>
     </div>
 @else
-    <form action="{{ url('/gedung/' . $gedung->gedung_id . '/delete_ajax') }}" method="POST" id="form-delete">
+    <form action="{{ url('/fasilitas/' . $fasilitas->fasilitas_id.'/delete_ajax') }}" method="POST" id="form-delete">
         @csrf
         @method('DELETE')
         <div id="modal-master" class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Hapus Data Gedung</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Hapus Data Fasilitas</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-warning">
                         <h5><i class="fas fa-ban"></i> Konfirmasi !!!</h5>
-                        Apakah Anda ingin menghapus data berikut?
+                        Apakah Anda ingin menghapus data fasilitas berikut?
                     </div>
                     <table class="table-sm table-bordered table-striped">
-                        <tr><th class="text-right col-3">Kode Gedung :</th><td class="col-9">{{ $gedung->gedung_kode }}</td></tr>
-                        <tr><th class="text-right col-3">Nama Gedung :</th><td class="col-9">{{ $gedung->gedung_nama }}</td></tr>
-                        <tr><th class="text-right col-3">Deskripsi :</th><td class="col-9">{{ $gedung->description }}</td></tr>
+                        <tr><th class="text-right col-3">ID Fasilitas :</th><td class="col-9">{{ $fasilitas->fasilitas_id }}</td></tr>
+                        <tr><th class="text-right col-3">Kode Fasilitas :</th><td class="col-9">{{ $fasilitas->fasilitas_kode }}</td></tr>
+                        <tr><th class="text-right col-3">Ruang :</th><td class="col-9">{{ $fasilitas->ruang->ruang_nama ?? '-' }} (ID: {{ $fasilitas->ruang_id }})</td></tr>
+                        <tr><th class="text-right col-3">Kategori :</th><td class="col-9">{{ $fasilitas->kategori->kategori_nama ?? '-' }} (ID: {{ $fasilitas->kategori_id }})</td></tr>
+                        <tr><th class="text-right col-3">Deskripsi :</th><td class="col-9">{{ $fasilitas->deskripsi ?? '-' }}</td></tr>
+                        <tr><th class="text-right col-3">Status :</th><td class="col-9">
+                            @if($fasilitas->status == 'baik')
+                                <span class="badge badge-success">Baik</span>
+                            @elseif($fasilitas->status == 'rusak_ringan')
+                                <span class="badge badge-warning">Rusak Ringan</span>
+                            @else
+                                <span class="badge badge-danger">Rusak Berat</span>
+                            @endif
+                        </td></tr>
                     </table>
                 </div>
                 <div class="modal-footer">
@@ -42,7 +53,6 @@
             </div>
         </div>
     </form>
-
     <script>
         $(document).ready(function() {
             $("#form-delete").validate({
@@ -60,8 +70,7 @@
                                     title: 'Berhasil',
                                     text: response.message
                                 });
-                                // Jika kamu menggunakan DataTable untuk gedung, ganti dataGedung dengan variabel table datamu
-                                dataGedung.ajax.reload();
+                                dataFasilitas.ajax.reload(); // Ganti dengan nama variabel DataTables Anda
                             } else {
                                 $('.error-text').text('');
                                 $.each(response.msgField, function(prefix, val) {
@@ -73,6 +82,13 @@
                                     text: response.message
                                 });
                             }
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Terjadi Kesalahan',
+                                text: 'Gagal menghapus data fasilitas'
+                            });
                         }
                     });
                     return false;

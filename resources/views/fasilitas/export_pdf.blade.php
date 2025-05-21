@@ -14,10 +14,11 @@
         }
         td, th {
             padding: 4px 3px;
-            vertical-align: top;
+            font-size: 10pt;
         }
         th {
             text-align: left;
+            background-color: #f2f2f2;
         }
         .d-block {
             display: block;
@@ -55,7 +56,28 @@
         .border-all,
         .border-all th,
         .border-all td {
-            border: 1px solid;
+            border: 1px solid #ddd;
+        }
+        .font-bold {
+            font-weight: bold;
+        }
+        .mb-1 {
+            margin-bottom: 5px;
+        }
+        .badge {
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 10pt;
+            color: white;
+        }
+        .badge-success {
+            background-color: #28a745;
+        }
+        .badge-warning {
+            background-color: #ffc107;
+        }
+        .badge-danger {
+            background-color: #dc3545;
         }
     </style>
 </head>
@@ -68,41 +90,56 @@
                     $imageData = base64_encode(file_get_contents($imagePath));
                     $src = 'data: ' . mime_content_type($imagePath) . ';base64,' . $imageData;
                 @endphp
-                <img src="{{ $src }}" width="100" alt="Logo Polinema">
+                <img src="{{ $src }}" width="100">
             </td>
             <td width="85%">
                 <span class="text-center d-block font-11 font-bold mb-1">KEMENTERIAN PENDIDIKAN, KEBUDAYAAN, RISET, DAN TEKNOLOGI</span>
                 <span class="text-center d-block font-13 font-bold mb-1">POLITEKNIK NEGERI MALANG</span>
                 <span class="text-center d-block font-10">Jl. Soekarno-Hatta No. 9 Malang 65141</span>
-                <span class="text-center d-block font-10">Telepon (0341) 404424 Pes. 101-105, 0341-404420, Fax. (0341) 404420</span>
+                <span class="text-center d-block font-10">Telepon (0341) 404424 Pes. 101- 105, 0341-404420, Fax. (0341) 404420</span>
                 <span class="text-center d-block font-10">Laman: www.polinema.ac.id</span>
             </td>
         </tr>
     </table>
 
-    <h3 class="text-center">LAPORAN DATA GEDUNG</h3>
+    <h3 class="text-center">LAPORAN DATA FASILITAS</h3>
 
     <table class="border-all">
         <thead>
             <tr>
                 <th class="text-center">No</th>
-                <th class="text-center">ID Gedung</th>
-                <th class="text-center">Kode Gedung</th>
-                <th class="text-center">Nama Gedung</th>
-                <th class="text-center">Deskripsii</th>
+                <th class="text-center">Kode</th>
+                <th>Ruang</th>
+                <th>Kategori</th>
+                <th>Deskripsi</th>
+                <th class="text-center">Status</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($gedung as $g)
+            @foreach($fasilitas as $f)
                 <tr>
                     <td class="text-center">{{ $loop->iteration }}</td>
-                    <td class="text-center">{{ $g->gedung_id }}</td>
-                    <td class="text-center">{{ $g->gedung_kode }}</td>
-                    <td>{{ $g->gedung_nama }}</td>
-                    <td>{{ $g->description }}</td>
+                    <td class="text-center">{{ $f->fasilitas_kode }}</td>
+                    <td>{{ $f->ruang->ruang_nama ?? '-' }}</td>
+                    <td>{{ $f->kategori->kategori_nama ?? '-' }}</td>
+                    <td>{{ $f->deskripsi ?? '-' }}</td>
+                    <td class="text-center">
+                        @if($f->status == 'baik')
+                            <span class="badge badge-success">Baik</span>
+                        @elseif($f->status == 'rusak_ringan')
+                            <span class="badge badge-warning">Rusak Ringan</span>
+                        @else
+                            <span class="badge badge-danger">Rusak Berat</span>
+                        @endif
+                    </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+    
+    <div style="margin-top: 30px; float: right; text-align: center; width: 200px;">
+        <div>Malang, {{ date('d F Y') }}</div>
+        <div style="margin-top: 60px;">(_______________________)</div>
+    </div>
 </body>
 </html>

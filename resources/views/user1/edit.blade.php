@@ -1,4 +1,4 @@
-@extends('layouts.template')
+@extends('layouts1.template')
 
 @section('content')
 
@@ -8,49 +8,56 @@
         <div class="card-tools"></div>
     </div>
     <div class="card-body">
-        @empty($gedung)
+        @empty($user)
             <div class="alert alert-danger alert-dismissible">
                 <h5><i class="icon fas fa-ban"></i> Kesalahan!</h5>
                 Data yang Anda cari tidak ditemukan.
             </div>
-            <a href="{{ url('gedung') }}" class="btn btn-sm btn-default mt-2">Kembali</a>
+            <a href="{{ url('user') }}" class="btn btn-sm btn-default mt-2">Kembali</a>
         @else
-            <form method="POST" action="{{ url('/gedung/'.$gedung->gedung_id) }}" class="form-horizontal">
+            <form method="POST" action="{{ url('/user/'.$user->user_id) }}" class="form-horizontal">
                 @csrf
                 {!! method_field('PUT') !!}
                 <div class="form-group row">
-                    <label class="col-1 control-label col-form-label">Kode Gedung</label>
+                    <label class="col-1 control-label col-form-label">Level</label>
                     <div class="col-11">
-                        <input type="text" class="form-control" id="gedung_kode" name="gedung_kode" value="{{ old('gedung_kode', $gedung->gedung_kode) }}" required>
-                        @error('gedung_kode')
+                        <select class="form-control" id="level_id" name="level_id" required>
+                            <option value="">- Pilih Level -</option>
+                            @foreach($level as $item)
+                                <option value="{{ $item->level_id }}" @if($item->level_id == $user->level_id) selected @endif>{{ $item->level_nama }}</option>
+                            @endforeach
+                        </select>
+                        @error('level_id')
                             <small class="form-text text-danger">{{ $message }}</small>
                         @enderror
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-1 control-label col-form-label">Nama Gedung</label>
+                    <label class="col-1 control-label col-form-label">Username</label>
                     <div class="col-11">
-                        <input type="text" class="form-control" id="gedung_nama" name="gedung_nama" value="{{ old('gedung_nama', $gedung->gedung_nama) }}" required>
-                        @error('gedung_nama')
+                        <input type="text" class="form-control" id="username" name="username" value="{{ old('username', $user->username) }}" required>
+                        @error('username')
                             <small class="form-text text-danger">{{ $message }}</small>
                         @enderror
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-1 control-label col-form-label">Waktu Dibuat</label>
+                    <label class="col-1 control-label col-form-label">Nama</label>
                     <div class="col-11">
-                        <input type="text" class="form-control" id="created_at" name="created_at" value="{{ old('created_at', $gedung->created_at) }}" readonly>
-                        @error('created_at')
+                        <input type="text" class="form-control" id="nama" name="nama" value="{{ old('nama', $user->nama) }}" required>
+                        @error('nama')
                             <small class="form-text text-danger">{{ $message }}</small>
                         @enderror
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-1 control-label col-form-label">Waktu Diupdate</label>
+                    <label class="col-1 control-label col-form-label">Password</label>
                     <div class="col-11">
-                        <input type="text" class="form-control" id="updated_at" name="updated_at" value="{{ old('updated_at', $gedung->updated_at) }}" readonly>
-                        @error('updated_at')
+                        <input type="password" class="form-control" id="password" name="password">
+                        @error('password')
                             <small class="form-text text-danger">{{ $message }}</small>
+                        @else
+                            <small class="form-text text-muted">Abaikan (jangan diisi) jika tidak ingin mengganti password user.</small>
                         @enderror
                     </div>
                 </div>
@@ -58,18 +65,19 @@
                     <label class="col-1 control-label col-form-label"></label>
                     <div class="col-11">
                         <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
-                        <a class="btn btn-sm btn-default ml-1" href="{{ url('gedung') }}">Kembali</a>
+                        <a class="btn btn-sm btn-default ml-1" href="{{ url('user') }}">Kembali</a>
+                      </div>
                     </div>
+                  </form>
                 </div>
-            </form>
         @endempty
     </div>
 </div>
-
+  
 @endsection
-
+  
 @push('css')
 @endpush
-
+  
 @push('js')
 @endpush

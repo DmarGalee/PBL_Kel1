@@ -1,48 +1,51 @@
-@empty($gedung) 
+@empty($ruang)
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Kesalahan</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <div class="alert alert-danger">
                     <h5><i class="icon fas fa-ban"></i> Kesalahan!!!</h5>
-                    Data yang anda cari tidak ditemukan!!
+                    Data ruang yang anda cari tidak ditemukan
                 </div>
-                <a href="{{ url('/gedung') }}" class="btn btn-warning">Kembali</a>
+                <a href="{{ url('/ruang') }}" class="btn btn-warning">Kembali</a>
             </div>
         </div>
     </div>
 @else
-    <form action="{{ url('/gedung/' . $gedung->gedung_id . '/update_ajax') }}" method="POST" id="form-edit">
+    <form action="{{ url('/ruang/' . $ruang->ruang_id . '/update_ajax') }}" method="POST" id="form-edit">
         @csrf
         @method('PUT')
         <div id="modal-master" class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Edit Data Gedung</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Data Ruang</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Kode Gedung</label>
-                        <input value="{{ $gedung->gedung_kode }}" type="text" name="gedung_kode" id="gedung_kode"
+                        <label>Nama Ruang</label>
+                        <input value="{{ $ruang->ruang_nama }}" type="text" name="ruang_nama" id="ruang_nama"
                             class="form-control" required>
-                        <small id="error-gedung-kode" class="error-text form-text text-danger"></small>
+                        <small id="error-ruang-nama" class="error-text form-text text-danger"></small>
                     </div>
                     <div class="form-group">
-                        <label>Nama Gedung</label>
-                        <input value="{{ $gedung->gedung_nama }}" type="text" name="gedung_nama" id="gedung_nama"
-                            class="form-control" required>
-                        <small id="error-gedung-nama" class="error-text form-text text-danger"></small>
-                    </div>
-                    <div class="form-group">
-                        <label>Deskripsi</label>
-                        <textarea name="description" id="description" class="form-control" rows="3" required>{{ $gedung->description }}</textarea>
-                        <small id="error-description" class="error-text form-text text-danger"></small>
+                        <label>Lantai</label>
+                        <select name="lantai_id" id="lantai_id" class="form-control" required>
+                            <option value="">- Pilih Lantai -</option>
+                            @foreach($lantai as $l)
+                                <option value="{{ $l->lantai_id }}" {{ $ruang->lantai_id == $l->lantai_id ? 'selected' : '' }}>
+                                    Lantai {{ $l->lantai_id }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <small id="error-lantai_id" class="error-text form-text text-danger"></small>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -52,16 +55,27 @@
             </div>
         </div>
     </form>
-
     <script>
         $(document).ready(function () {
             $("#form-edit").validate({
                 rules: {
-                    gedung_kode: { required: true, minlength: 3 },
-                    gedung_nama: { required: true, minlength: 3 },
-                    description: { required: true, minlength: 5 }
+                    ruang_nama: { 
+                        required: true, 
+                        minlength: 3 
+                    },
+                    lantai_id: { 
+                        required: true 
+                    }
                 },
-
+                messages: {
+                    ruang_nama: {
+                        required: "Nama ruang harus diisi",
+                        minlength: "Nama ruang minimal 3 karakter"
+                    },
+                    lantai_id: {
+                        required: "Lantai harus dipilih"
+                    }
+                },
                 submitHandler: function (form) {
                     $.ajax({
                         url: form.action,
@@ -75,10 +89,7 @@
                                     title: 'Berhasil',
                                     text: response.message
                                 });
-                                // Misal kamu pakai datatable dengan variabel dataGedung
-                                if(typeof dataGedung !== 'undefined') {
-                                    dataGedung.ajax.reload();
-                                }
+                                dataRuang.ajax.reload();
                             } else {
                                 $('.error-text').text('');
                                 $.each(response.msgField, function (prefix, val) {

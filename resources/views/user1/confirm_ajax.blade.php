@@ -1,67 +1,64 @@
-@empty($gedung) 
+@empty($user)
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Kesalahan</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                <button type="button" class="close" data-dismiss="modal" arialabel="Close"><span
                         aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
                 <div class="alert alert-danger">
                     <h5><i class="icon fas fa-ban"></i> Kesalahan!!!</h5>
-                    Data yang anda cari tidak ditemukan!!
+                    Data yang anda cari tidak ditemukan
                 </div>
-                <a href="{{ url('/gedung') }}" class="btn btn-warning">Kembali</a>
+                <a href="{{ url('/user') }}" class="btn btn-warning">Kembali</a>
             </div>
         </div>
     </div>
 @else
-    <form action="{{ url('/gedung/' . $gedung->gedung_id . '/update_ajax') }}" method="POST" id="form-edit">
+    <form action="{{ url('/user/' . $user->user_id . '/delete_ajax') }}" method="POST" id="form-delete">
         @csrf
-        @method('PUT')
+        @method('DELETE')
         <div id="modal-master" class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Edit Data Gedung</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    <h5 class="modal-title" id="exampleModalLabel">Hapus Data User</h5>
+                    <button type="button" class="close" data-dismiss="modal" arialabel="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label>Kode Gedung</label>
-                        <input value="{{ $gedung->gedung_kode }}" type="text" name="gedung_kode" id="gedung_kode"
-                            class="form-control" required>
-                        <small id="error-gedung-kode" class="error-text form-text text-danger"></small>
+                    <div class="alert alert-warning">
+                        <h5><i class="icon fas fa-ban"></i> Konfirmasi !!!</h5>
+                        Apakah Anda ingin menghapus data seperti di bawah ini?
                     </div>
-                    <div class="form-group">
-                        <label>Nama Gedung</label>
-                        <input value="{{ $gedung->gedung_nama }}" type="text" name="gedung_nama" id="gedung_nama"
-                            class="form-control" required>
-                        <small id="error-gedung-nama" class="error-text form-text text-danger"></small>
-                    </div>
-                    <div class="form-group">
-                        <label>Deskripsi</label>
-                        <textarea name="description" id="description" class="form-control" rows="3" required>{{ $gedung->description }}</textarea>
-                        <small id="error-description" class="error-text form-text text-danger"></small>
-                    </div>
+                    <table class="table table-sm table-bordered table-striped">
+                        <tr>
+                            <th class="text-right col-3">Level Pengguna :</th>
+                            <td class="col-9">{{
+            $user->level->level_nama }}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-right col-3">Username :</th>
+                            <td class="col-9">{{
+            $user->username }}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-right col-3">Nama :</th>
+                            <td class="col-9">{{ $user->nama }}</td>
+                        </tr>
+                    </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" data-dismiss="modal" class="btn btn-warning">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="button" data-dismiss="modal" class="btn btnwarning">Batal</button>
+                    <button type="submit" class="btn btn-primary">Ya, Hapus</button>
                 </div>
             </div>
         </div>
     </form>
-
     <script>
         $(document).ready(function () {
-            $("#form-edit").validate({
-                rules: {
-                    gedung_kode: { required: true, minlength: 3 },
-                    gedung_nama: { required: true, minlength: 3 },
-                    description: { required: true, minlength: 5 }
-                },
-
+            $("#form-delete").validate({
+                rules: {},
                 submitHandler: function (form) {
                     $.ajax({
                         url: form.action,
@@ -75,10 +72,7 @@
                                     title: 'Berhasil',
                                     text: response.message
                                 });
-                                // Misal kamu pakai datatable dengan variabel dataGedung
-                                if(typeof dataGedung !== 'undefined') {
-                                    dataGedung.ajax.reload();
-                                }
+                                dataUser.ajax.reload();
                             } else {
                                 $('.error-text').text('');
                                 $.each(response.msgField, function (prefix, val) {

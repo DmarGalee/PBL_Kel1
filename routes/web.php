@@ -6,8 +6,11 @@ use App\Http\Controllers\LevelController;
 use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\LantaiController;
 use App\Http\Controllers\GedungController;
+use App\Http\Controllers\RuangController;
+use App\Http\Controllers\FasilitasController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserController2;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +33,7 @@ Route::post('register', [AuthController::class, 'postRegister']);
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postlogin']);
 //logout
-Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
+Route::get('logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 
 
@@ -38,11 +41,13 @@ Route::middleware(['auth'])->group(function () { //artinya semua route di dalam 
     // masukkan semua route yang perlu autentikasi di sini
 
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+            Route::get('/template', [UserController2::class, 'index']);
 
       Route::middleware(['authorize:ADM'])->group(function () {
          
         //route user
         Route::group(['prefix' => 'user'], function () {
+            Route::get('/templates', [UserController2::class, 'index']);
             Route::get('/', [UserController::class, 'index']); // menampilkan halaman awal user
             Route::post('/list', [UserController::class, 'list']); // menampilkan data user dalam bentuk json untuk datables
             Route::get('/create', [UserController::class, 'create']); // menampilkan halaman form tambah user
@@ -92,7 +97,7 @@ Route::middleware(['auth'])->group(function () { //artinya semua route di dalam 
             Route::get('/{id}/delete_ajax', [GedungController::class, 'confirm_ajax']); // untuk tampilan form confirm delete Gedung ajax
             Route::delete('/{id}/delete_ajax', [GedungController::class, 'delete_ajax']); // menghapus data Gedung ajax
             Route::post('/import_ajax', [GedungController::class, 'import_ajax']); // menyimpan data Gedung dari file import
-            Route::get('/export_excel', [GedungController::class, 'export_excel']); // ajax export excel
+            Route::get('/export_excel', [LevelController::class,'export_excel']); // ajax export excel
             Route::get('/export_pdf', [GedungController::class, 'export_pdf']); // ajax export pdf
         });
 
@@ -114,8 +119,19 @@ Route::middleware(['auth'])->group(function () { //artinya semua route di dalam 
         });
 
          //route ruang
-         Route::group(['prefix' => 'ruang'], function () {
-          
+        Route::group(['prefix' => 'ruang'], function () {
+            Route::get('/', [RuangController::class, 'index']); // menampilkan halaman awal Ruang
+            Route::post('/list', [RuangController::class, 'list']); // menampilkan data Ruang dalam bentuk json untuk datatable
+            Route::get('/create_ajax', [RuangController::class, 'create_ajax']); // menampilkan halaman form tambah Ruang ajax
+            Route::post('/ajax', [RuangController::class, 'store_ajax']); // menyimpan data Ruang baru ajax
+            Route::get('/{id}/show_ajax', [RuangController::class, 'show_ajax']); // menampilkan detail Ruang ajax
+            Route::get('/{id}/edit_ajax', [RuangController::class, 'edit_ajax']); // menampilkan halaman form edit Ruang ajax
+            Route::put('/{id}/update_ajax', [RuangController::class, 'update_ajax']); // menyimpan perubahan data Ruang ajax
+            Route::get('/{id}/delete_ajax', [RuangController::class, 'confirm_ajax']); // untuk tampilan form confirm delete Ruang ajax
+            Route::delete('/{id}/delete_ajax', [RuangController::class, 'delete_ajax']); // menghapus data Ruang ajax
+            Route::post('/import_ajax', [RuangController::class, 'import_ajax']); // menyimpan data Ruang dari file import
+            Route::get('/export_excel', [RuangController::class, 'export_excel']); // ajax export excel
+            Route::get('/export_pdf', [RuangController::class, 'export_pdf']); // ajax export pdf
         });
 
         //route periode
@@ -133,6 +149,24 @@ Route::middleware(['auth'])->group(function () { //artinya semua route di dalam 
             Route::get('/export_excel', [PeriodeController::class,'export_excel']); // ajax export excel
             Route::get('/export_pdf', [PeriodeController::class,'export_pdf']); // ajax export pdf
         });
+
+        //route fasilitas
+         Route::group(['prefix' => 'fasilitas'], function () {
+         Route::get('/', [FasilitasController::class, 'index']); // menampilkan halaman awal Level
+            Route::post('/list', [FasilitasController::class, 'list']); // menampilkan data Level dalam bentuk json untuk datatable
+            Route::get('/create_ajax', [FasilitasController::class, 'create_ajax']); // menampilkan halaman form tambah Level ajax
+            Route::post('/ajax', [FasilitasController::class, 'store_ajax']); // menyimpan data Level baru ajax
+            Route::get('/{id}/show_ajax', [FasilitasController::class, 'show_ajax']); // menampilkan detail Level ajax
+            Route::get('/{id}/edit_ajax', [FasilitasController::class, 'edit_ajax']); // menampilkan halaman form edit Level ajax
+            Route::put('/{id}/update_ajax', [FasilitasController::class, 'update_ajax']); // menyimpan perubahan data Level ajax
+            Route::get('/{id}/delete_ajax', [FasilitasController::class, 'confirm_ajax']); // untuk tampilan form confirm delete Level ajax
+            Route::delete('/{id}/delete_ajax', [FasilitasController::class, 'delete_ajax']); // menghapus data Level ajax
+            Route::post('/import_ajax', [FasilitasController::class, 'import_ajax']); // menyimpan data Level dari file import
+            Route::get('/export_excel', [FasilitasController::class,'export_excel']); // ajax export excel
+            Route::get('/export_pdf', [FasilitasController::class,'export_pdf']); // ajax export pdf
+        });
+
+
     });
 
     // Pelapor Mahasiswa, Dosen, Tenga Kependidikan

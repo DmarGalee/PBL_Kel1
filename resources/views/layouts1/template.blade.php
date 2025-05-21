@@ -18,12 +18,12 @@
 
 
         <!-- Sidebar -->
-        @include('layouts.sidebar')
+        @include('layouts1.sidebar')
 
         <!-- Main Content -->
         <div id="main" class='layout-navbar navbar-fixed'>
             <!-- Navbar -->
-            @include('layouts.header')
+            @include('layouts1.header')
 
 
             {{-- breadcrumb dan main content --}}
@@ -32,7 +32,7 @@
                 <div class="page-heading">
 
                     {{-- breadcrumb --}}
-                    @include('layouts.breadcrumb')
+                    @include('layouts1.breadcrumb')
 
                     {{-- main content --}}
                     <section class="section">
