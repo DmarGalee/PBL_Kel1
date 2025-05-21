@@ -12,18 +12,22 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class KategoriController extends Controller
 {
     public function index()
-    {
-        $activeMenu = 'kategori';
-        $breadcrumb = (object) [
-            'title' => 'Data Kategori',
-            'list' => ['Home', 'Kategori']
-        ];
+{
+    $activeMenu = 'kategori';
+    $breadcrumb = (object) [
+        'title' => 'Data Kategori',
+        'list' => ['Home', 'Kategori']
+    ];
+    $page = (object) [
+        'title' => 'Daftar Kategori'
+    ];
 
-        return view('kategori.index', [
-            'activeMenu' => $activeMenu,
-            'breadcrumb' => $breadcrumb
-        ]);
-    }
+    return view('kategori.index', [
+        'activeMenu' => $activeMenu,
+        'breadcrumb' => $breadcrumb,
+        'page' => $page
+    ]);
+}
 
     public function list(Request $request)
     {
@@ -33,8 +37,8 @@ class KategoriController extends Controller
             ->addIndexColumn()
             ->addColumn('aksi', function ($kategori) {
                 $btn  = '<button onclick="modalAction(\'' . url('/kategori/' . $kategori->kategori_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
-                $btn .= '<button onclick="modalAction(\'' . url('/kategori/' . $kategori->kategori_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
-                $btn .= '<button onclick="modalAction(\'' . url('/kategori/' . $kategori->kategori_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
+                // $btn .= '<button onclick="modalAction(\'' . url('/kategori/' . $kategori->kategori_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
+                // $btn .= '<button onclick="modalAction(\'' . url('/kategori/' . $kategori->kategori_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
                 return $btn;
             })
             ->rawColumns(['aksi'])
