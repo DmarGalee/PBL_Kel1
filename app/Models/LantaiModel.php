@@ -2,7 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+ use Illuminate\Database\Eloquent\Model;
+ use Tymon\JWTAuth\Contracts\JWTSubject;
+ use Illuminate\Database\Eloquent\Casts\Attribute;
+ use App\Models\GedungModel;
 
 class LantaiModel extends Model
 {

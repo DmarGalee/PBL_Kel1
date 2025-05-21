@@ -79,22 +79,22 @@ class LantaiController extends Controller
 
     public function create_ajax()
     {
-        $gedungs = GedungModel::all(); // Ambil data gedung untuk dropdown
+        $gedungs = GedungModel::all();
         return view('lantai.create_ajax', compact('gedungs'));
     }
     
     // Menyimpan lantai baru (AJAX)
     public function store_ajax(Request $request)
-    {
-        if ($request->ajax() || $request->wantsJson()) {
-            $rules = [
-                'lantai_nomor' => 'required|string|min:2|unique:m_lantai,lantai_nomor',
-                'deskripsi' => 'nullable|string|max:255',
-                'gedung_id' => 'required|integer|exists:m_gedung,gedung_id',
-            ];
-    
-            $validator = Validator::make($request->all(), $rules);
-    
+{
+    if ($request->ajax() || $request->wantsJson()) {
+        $rules = [
+            'lantai_nomor' => 'required|string|min:2|unique:m_lantai,lantai_nomor',
+            'deskripsi' => 'nullable|string|max:255',
+            'gedung_id' => 'required|integer|exists:m_gedung,gedung_id',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
             if ($validator->fails()) {
                 return response()->json([
                     'status' => false,
@@ -102,17 +102,17 @@ class LantaiController extends Controller
                     'msgField' => $validator->errors(),
                 ], 422);
             }
-    
+
             LantaiModel::create($request->all());
-    
+
             return response()->json([
                 'status' => true,
-                'message' => 'Data lantai berhasil disimpan',
+                'message' => 'Data barang berhasil disimpan',
             ]);
         }
-    
         return redirect('/');
     }
+
     
     public function edit_ajax(string $id)
     {
