@@ -23,6 +23,13 @@
                     <input type="file" name="file_gedung" id="file_gedung" class="form-control" required>
                     <small id="error-file_gedung" class="error-text form-text text-danger"></small>
                 </div>
+                <div class="alert alert-info">
+                    <strong>Petunjuk:</strong>
+                    <ul>
+                        <li>File harus berformat .xlsx (Excel)</li>
+                        <li>Kolom harus sesuai dengan template yang disediakan</li>
+                        <li>Data lantai harus sudah tersedia di sistem</li>
+                    </ul>
             </div>
 
             <div class="modal-footer">
