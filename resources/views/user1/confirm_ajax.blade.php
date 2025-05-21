@@ -1,14 +1,13 @@
 @empty($user)
-    <div id="modal-master" class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Kesalahan</h5>
-                <button type="button" class="close" data-dismiss="modal" arialabel="Close"><span
-                        aria-hidden="true">&times;</span></button>
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Kesalahan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="alert alert-danger">
-                    <h5><i class="icon fas fa-ban"></i> Kesalahan!!!</h5>
+                    <h5><i class="bi bi-exclamation-triangle-fill"></i> Kesalahan!!!</h5>
                     Data yang anda cari tidak ditemukan
                 </div>
                 <a href="{{ url('/user') }}" class="btn btn-warning">Kembali</a>
@@ -19,38 +18,35 @@
     <form action="{{ url('/user/' . $user->user_id . '/delete_ajax') }}" method="POST" id="form-delete">
         @csrf
         @method('DELETE')
-        <div id="modal-master" class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Hapus Data User</h5>
-                    <button type="button" class="close" data-dismiss="modal" arialabel="Close"><span
-                            aria-hidden="true">&times;</span></button>
+                <div class="modal-header bg-warning text-white">
+                    <h5 class="modal-title">Hapus Data User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-warning">
-                        <h5><i class="icon fas fa-ban"></i> Konfirmasi !!!</h5>
+                        <h5><i class="bi bi-exclamation-triangle-fill"></i> Konfirmasi !!!</h5>
                         Apakah Anda ingin menghapus data seperti di bawah ini?
                     </div>
                     <table class="table table-sm table-bordered table-striped">
                         <tr>
-                            <th class="text-right col-3">Level Pengguna :</th>
-                            <td class="col-9">{{
-            $user->level->level_nama }}</td>
+                            <th class="text-end col-3">Level Pengguna :</th>
+                            <td class="col-9">{{ $user->level->level_nama }}</td>
                         </tr>
                         <tr>
-                            <th class="text-right col-3">Username :</th>
-                            <td class="col-9">{{
-            $user->username }}</td>
+                            <th class="text-end col-3">Username :</th>
+                            <td class="col-9">{{ $user->username }}</td>
                         </tr>
                         <tr>
-                            <th class="text-right col-3">Nama :</th>
+                            <th class="text-end col-3">Nama :</th>
                             <td class="col-9">{{ $user->nama }}</td>
                         </tr>
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" data-dismiss="modal" class="btn btnwarning">Batal</button>
-                    <button type="submit" class="btn btn-primary">Ya, Hapus</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-danger">Ya, Hapus</button>
                 </div>
             </div>
         </div>
@@ -66,7 +62,8 @@
                         data: $(form).serialize(),
                         success: function (response) {
                             if (response.status) {
-                                $('#myModal').modal('hide');
+                                var modal = bootstrap.Modal.getInstance(document.getElementById('modal-crud'));
+                                modal.hide();
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Berhasil',

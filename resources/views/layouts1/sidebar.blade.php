@@ -4,14 +4,14 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div class="logo">
                     <a href="index.html"><span class="brand-text font-weight-bold">
-  SILATAS <span style="color: rgb(41, 205, 255);">POLINEMA</span>
-</span></a>
+                            SILATAS <span style="color: rgb(41, 205, 255);">POLINEMA</span>
+                        </span></a>
                 </div>
                 <div class="theme-toggle d-flex gap-2 align-items-center mt-2">
                     <!-- Theme toggle icons -->
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                        aria-hidden="true" role="img" class="iconify iconify--system-uicons" width="20"
-                        height="20" preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21">
+                        aria-hidden="true" role="img" class="iconify iconify--system-uicons" width="20" height="20"
+                        preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21">
                         <g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round"
                             stroke-linejoin="round">
                             <path
@@ -62,13 +62,13 @@
                     </a>
                     <ul class="submenu">
                         <li class="submenu-item  ">
-                        <a href="component-accordion.html" class="submenu-link">Accordion</a>
-                        
-                    </li>
-                     <li class="submenu-item  ">
-                        <a href="component-alert.html" class="submenu-link">Alert</a>
-                        
-                    </li>
+                            <a href="component-accordion.html" class="submenu-link">Accordion</a>
+
+                        </li>
+                        <li class="submenu-item  ">
+                            <a href="component-alert.html" class="submenu-link">Alert</a>
+
+                        </li>
                         <!-- Other component items -->
                     </ul>
                 </li>
