@@ -1,32 +1,29 @@
 <form action="{{ url('/user/import_ajax') }}" method="POST" id="form-import" enctype="multipart/form-data">
     @csrf
-    <div id="modal-master" class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Import Data user</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Import Data user</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body">
-                <div class="form-group">
-                    <label>Download Template</label>
+                <div class="mb-3">
+                    <label class="form-label">Download Template</label>
                     <a href="{{ asset('template_user.xlsx') }}" class="btn btn-info btn-sm" download>
-                        <i class="fa fa-file-excel"></i> Download
+                        <i class="bi bi-file-excel"></i> Download
                     </a>
-                    <small id="error-user_id" class="error-text form-text text-danger"></small>
                 </div>
 
-                <div class="form-group">
-                    <label>Pilih File</label>
+                <div class="mb-3">
+                    <label class="form-label">Pilih File</label>
                     <input type="file" name="file_user" id="file_user" class="form-control" required>
                     <small id="error-file_user" class="error-text form-text text-danger"></small>
                 </div>
             </div>
 
             <div class="modal-footer">
-                <button type="button" data-dismiss="modal" class="btn btn-warning">Batal</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                 <button type="submit" class="btn btn-primary">Upload</button>
             </div>
         </div>
@@ -50,13 +47,14 @@
                     contentType: false,
                     success: function (response) {
                         if (response.status) {
-                            $('#myModal').modal('hide');
+                            var modal = bootstrap.Modal.getInstance(document.getElementById('modal-crud'));
+                            modal.hide();
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil',
                                 text: response.message
                             });
-                            tableuser.ajax.reload();
+                            dataUser.ajax.reload();
                         } else {
                             $('.error-text').text('');
                             $.each(response.msgField, function (prefix, val) {
