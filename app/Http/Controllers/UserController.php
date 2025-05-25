@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\UserModel;
 use App\Models\LevelModel;
-// use Validator;
 use Illuminate\Support\Facades\Validator;
 use Monolog\Level;
 use Yajra\DataTables\Facades\DataTables;
@@ -30,9 +29,12 @@ class UserController extends Controller
 
         $level = LevelModel::all(); // ambil data level untuk ditampilkan di form
 
-        return view('user.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'level' => $level, 'activeMenu' => $acttiveMenu]);
-        // $user = UserModel::with('level')->get();
-        // return view('user', ['data' => $user]);
+        return view('user.index', [
+            'breadcrumb' => $breadcrumb, 
+            'page' => $page, 
+            'level' => $level, 
+            'activeMenu' => $acttiveMenu
+        ]);
     }
 
     // ambil data user dalam bentuk json untuk datatables
@@ -47,13 +49,7 @@ class UserController extends Controller
     
         return DataTables::of($users)
             ->addIndexColumn() //Menambahkan kolom index / no urut(default nama kolom: DT_RowIndex)
-            ->addColumn('aksi', function ($user) { //menambahkan kolom aksi
-                // $btn = '<a href="'.url('/user/' .$user->user_id).'" class="btn btn-info btn-sm">Detail</a> ';
-                // $btn .= '<a href="'.url('/user/' .$user->user_id . '/edit').'" class="btn btn-warning btn-sm">Edit</a> ';
-                // $btn .= '<form class="d-inline-block" method="POST" action="'.url('/user/'.$user->user_id).'">'
-                //      . csrf_field() . method_field('DELETE')
-                //      . '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah anda yakin menghapus data ini?\');">Hapus</button></form>';
-                
+            ->addColumn('aksi', function ($user) {
                 $btn = '<button onclick="modalAction(\''.url('/user/' . $user->user_id . '/show_ajax').'\')" class="btn btn-info btn-sm">Detail</button> ';
                 $btn .= '<button onclick="modalAction(\''.url('/user/' . $user->user_id . '/edit_ajax').'\')" class="btn btn-warning btn-sm">Edit</button> ';
                 $btn .= '<button onclick="modalAction(\''.url('/user/' . $user->user_id . '/delete_ajax').'\')" class="btn btn-danger btn-sm">Hapus</button> ';
@@ -113,6 +109,20 @@ class UserController extends Controller
         $acttiveMenu = 'user'; // set menu yang aktif
 
         return view('user.show', ['breadcrumb' => $breadcrumb, 'page' => $page, 'user' => $user, 'activeMenu' => $acttiveMenu]);
+    }
+
+    // show_ajax
+    public function show_ajax(string $id){
+        $user = UserModel::with('level')->find($id);
+        $breadcrumb = (object) [
+            'title' => 'Detail User',
+            'list' => ['Home', 'User', 'Detail']
+        ];
+        $page = (object) [
+            'title' => 'Detail user'
+        ];
+        $acttiveMenu = 'user'; // set menu yang aktif
+        return view('user.show_ajax', ['breadcrumb' => $breadcrumb, 'page' => $page, 'user' => $user, 'activeMenu' => $acttiveMenu]);
     }
 
     // Menampilkan halaman form edit user
@@ -261,26 +271,7 @@ class UserController extends Controller
         return view('user.confirm_ajax', ['user' => $user]);
     }
 
-    // public function delete_ajax(Request $request, $id){
-    //     //ceek apakah request dari ajaz
-    //     if ($request->ajax() || $request->wantsJson()){
-    //         $user = UserModel::find($id);
-    //         if ($user){
-    //             $user->delete();
-    //             return response()->json([
-    //                 'status' => true,
-    //                 'message' => 'Data berhasil dihapus'
-    //             ]);
-    //         }else{
-    //             return response()->json([
-    //                 'status' => false,
-    //                 'message' => 'Data tidak di temukan'
-    //             ]);
-    //         }
-    //         return redirect('/');
-    //     }
-    // }
-
+    // fungsi delete_ajaxc
     public function delete_ajax(Request $request, $id){
         // cek apakah request dari ajax
         if ($request->ajax() || $request->wantsJson()) {

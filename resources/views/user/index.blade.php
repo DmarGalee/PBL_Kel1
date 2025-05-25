@@ -6,11 +6,9 @@
             <h3 class="card-title">{{ $page->title }}</h3>
             <div class="card-tools">
                 <button onclick="modalAction('{{ url('/user/import') }}')" class="btn btn-info">Import User</button>
-                <a href="{{ url('/user/export_excel') }}" class="btn btn-primary"><i class="fa fa-fileexcel"></i> Export User</a>
-                <a href="{{ url('/user/export_pdf') }}" class="btn btn-warning"><i class="fa fa-filepdf"></i> Export User</a>
-                <button onclick="modalAction('{{ url('/user/create_ajax') }}')" class="btn btn-success">
-                    Tambah Ajax
-                </button>
+                <a href="{{ url('/user/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export User</a>
+                <a href="{{ url('/user/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export User</a>
+                <button onclick="modalAction('{{ url('user/create_ajax') }}')" class="btn btn-success">Tambah User</button>
             </div>
         </div>
         <div class="card-body">
@@ -20,6 +18,8 @@
             @if (session('error'))
                 <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
+
+            {{-- Filter --}}
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group row">
@@ -62,6 +62,7 @@
 @endpush
 
 @push('js')
+
     <script>
         function modalAction(url) {
             $("#modal-crud .modal-content").html("");
@@ -74,9 +75,9 @@
             $("#modal-crud .modal-content").html("");
         });
 
-        var dataUSer;
+        var dataUser;
         $(document).ready(function () {
-                dataUser = $('#table_user').DataTable({
+            dataUser = $('#table_user').DataTable({
                 serverSide: true,
                 ajax: {
                     url: "{{ url('user/list') }}",
@@ -88,12 +89,13 @@
                 },
                 columns: [
                     { data: "DT_RowIndex", className: "text-center", orderable: false, searchable: false },
-                    { data: "username", className: "", orderable: true, searchable: true },
-                    { data: "nama", className: "", orderable: true, searchable: true },
-                    { data: "level.level_nama", className: "", orderable: false, searchable: false },
-                    { data: "aksi", className: "", orderable: false, searchable: false }
+                    { data: "username", orderable: true, searchable: true },
+                    { data: "nama", orderable: true, searchable: true },
+                    { data: "level.level_nama", orderable: false, searchable: false },
+                    { data: "aksi", orderable: false, searchable: false }
                 ]
             });
+
             $('#level_id').on('change', function () {
                 dataUser.ajax.reload();
             });

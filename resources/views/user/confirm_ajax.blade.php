@@ -19,7 +19,7 @@
     <form action="{{ url('/user/' . $user->user_id . '/delete_ajax') }}" method="POST" id="form-delete">
         @csrf
         @method('DELETE')
-        <div id="modal-master" class="modal-dialog modal-lg" role="document">
+        {{-- <div id="modal-master" class="modal-dialog modal-lg" role="document"> --}}
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Hapus Data User</h5>
@@ -53,7 +53,7 @@
                     <button type="submit" class="btn btn-primary">Ya, Hapus</button>
                 </div>
             </div>
-        </div>
+        {{-- </div> --}}
     </form>
     <script>
         $(document).ready(function () {

@@ -39,7 +39,7 @@
             </tr>
             <tr>
                 <th class="text-right col-3">Password :</th>
-                <td class="col-9"></td>
+                <td class="col-9">********</td>
             </tr>
         </table>
     <div class="modal-footer">
